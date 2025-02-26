@@ -1,4 +1,4 @@
-using JudgeBackend.Enum;
+using JudgeBackend.Models;
 
 public class JudgeResponse
 {
