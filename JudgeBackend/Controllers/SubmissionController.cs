@@ -60,7 +60,7 @@ public class SubmissionController : Controller
         var submission = await _submissionService.SubmitLabAsync(submissionDto);
         // TODO: Fix response
 
-        return CreatedAtAction(nameof(GetSubmissionById), new { id = submission.Id }, submission);
+        return CreatedAtAction(nameof(GetSubmissionById), submission);
     }
 
     // ✅ Delete a submission (Admin only)

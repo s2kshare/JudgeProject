@@ -168,3 +168,4 @@
 /home/s2k/Documents/Code-Folder/Individual Projects/JudgeProject/JudgeBackend/obj/Debug/net8.0/JudgeBackend.genruntimeconfig.cache
 /home/s2k/Documents/Code-Folder/Individual Projects/JudgeProject/JudgeBackend/obj/Debug/net8.0/ref/JudgeBackend.dll
 /home/s2k/Documents/Code-Folder/Individual Projects/JudgeProject/JudgeBackend/bin/Debug/net8.0/BCrypt.Net-Next.dll
+/home/s2k/Documents/Code-Folder/Individual Projects/JudgeProject/JudgeBackend/obj/Debug/net8.0/JudgeBackend.sourcelink.json
