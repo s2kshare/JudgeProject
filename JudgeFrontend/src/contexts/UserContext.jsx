@@ -31,12 +31,12 @@ const UserProvider = ({ children }) => {
             console.log(response);
 
             if (response.status == 200) {
-                // const { userId, role } = response.data;
                 console.log(response.data);
-                // localStorage.setItem("judge-project-uid", userId);
-                // localStorage.setItem("judge-project-role", role);
-                // setUser({ id: userId, role });
-                // navigate("/"); // Redirect after login
+                const { role } = response.data;
+                localStorage.setItem("judge-project-role", role);
+                setUser({ role });
+                navigate("/");
+                return true;
             }
         } catch (error) {
             throw error;

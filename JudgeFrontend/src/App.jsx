@@ -17,6 +17,7 @@ function App() {
         // if (!user) {
         //     navigate("/login");
         // }
+        console.log(user);
     }, [user, navigate]);
 
     return (
@@ -27,10 +28,10 @@ function App() {
                 position="bottom-right"
             />
             <Routes>
-                <Route path="/" element={<HomePage />} />
+                {!user && <Route path="/" element={!user && <HomePage />} />}
                 <Route element={<Layout />}>
+                    {user && <Route path="/" element={<UserHomePage />} />}
                     <Route path="/login" element={<LoginPage />} />
-                    <Route path="/home" element={<UserHomePage />} />
                     <Route path="/dashboard" element={<DashboardPage />} />
                     <Route path="/history" element={<>History</>} />
                 </Route>

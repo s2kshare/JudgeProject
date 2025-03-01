@@ -20,7 +20,8 @@ export function LoginForm() {
         e.preventDefault();
         setIsLoading(true);
         try {
-            await login(username, password); // Wait for login to complete
+            var loginRequest = await login(username, password); // Wait for login to complete
+            if (loginRequest) toast.success("Login Successful");
         } catch (error) {
             console.error(error.message);
             toast.error(error.message);
