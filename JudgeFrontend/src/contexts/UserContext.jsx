@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 
 const UserContext = createContext();
 const baseUrl = import.meta.env.VITE_BASE_URL;
+axios.defaults.withCredentials = true;
 
 const UserProvider = ({ children }) => {
     const navigate = useNavigate();
@@ -45,17 +46,20 @@ const UserProvider = ({ children }) => {
 
     const logout = async () => {
         try {
+            console.log(baseUrl + "/auth/logout");
             const response = await axios.post(baseUrl + "/auth/logout");
 
-            if (response.data.success) {
+            if (response.status == 200) {
                 localStorage.removeItem("judge-project-uid");
                 localStorage.removeItem("judge-project-role");
                 setUser(null);
+                navigate("/login");
             }
+
+            return response;
         } catch (error) {
             console.error("Login failed", error);
         }
-        navigate("/");
     };
 
     const submitLab = () => {

@@ -1,7 +1,11 @@
 import { Button, Typography } from "@material-tailwind/react";
 import { AvatarDropdownComponent } from "./AvatarDropdownComponent";
+import { useContext } from "react";
+import { UserContext } from "../contexts/UserContext";
 
 export default function TitlePageComponent({ page }) {
+    const { user } = useContext(UserContext);
+
     return (
         <div
             className={
@@ -10,7 +14,7 @@ export default function TitlePageComponent({ page }) {
                     : "hidden"
             }
         >
-            {localStorage.getItem("judge-project-role") && (
+            {user && (
                 <>
                     <Typography variant="h1" className="flex-1 mt-6 mb-3">
                         {page}

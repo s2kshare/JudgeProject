@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import {
     Avatar,
     Button,
@@ -14,36 +14,46 @@ import {
     UserCircleIcon,
 } from "@heroicons/react/24/solid";
 import { useNavigate } from "react-router-dom";
-
-// profile menu component
-const profileMenuItems = [
-    {
-        label: "My Profile",
-        icon: UserCircleIcon,
-        action: () => console.log("My Profile clicked"),
-    },
-    {
-        label: "Edit Profile",
-        icon: Cog6ToothIcon,
-        action: () => console.log("Edit Profile clicked"),
-    },
-    {
-        label: "Sign Out",
-        icon: PowerIcon,
-        action: (e, navigate) => {
-            e.preventDefault();
-            console.log("Signing out");
-            localStorage.removeItem("judge-project-uid");
-            localStorage.removeItem("judge-project-role");
-            navigate("/");
-        },
-    },
-];
+import { UserContext } from "../contexts/UserContext";
 
 export function AvatarDropdownComponent() {
     const navigate = useNavigate();
 
+    const handleLogoutRequest = async (e) => {
+        try {
+            var logoutRequest = await logout(username, password); // Wait for login to complete
+            if (loginRequest) toast.success("Login Successful");
+        } catch (error) {
+            console.error(error.message);
+            toast.error(error.message);
+        } finally {
+            setIsLoading(false); // Ensure loading stops even if login fails
+        }
+    };
+
     const [isMenuOpen, setIsMenuOpen] = React.useState(false);
+
+    const { logout } = useContext(UserContext);
+    const profileMenuItems = [
+        {
+            label: "My Profile",
+            icon: UserCircleIcon,
+            action: () => console.log("My Profile clicked"),
+        },
+        {
+            label: "Edit Profile",
+            icon: Cog6ToothIcon,
+            action: () => console.log("Edit Profile clicked"),
+        },
+        {
+            label: "Sign Out",
+            icon: PowerIcon,
+            action: (e, navigate) => {
+                e.preventDefault();
+                logout();
+            },
+        },
+    ];
 
     const closeMenu = () => setIsMenuOpen(false);
 

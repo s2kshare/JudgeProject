@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
 import {
     Card,
@@ -14,20 +14,12 @@ import { UserCircleIcon } from "@heroicons/react/24/solid";
 import { PaperSelectComponent } from "./PaperSelectComponent";
 import SubmitLabModal from "./modals/SubmitLabModal";
 import { navigation_links } from "../constants/navigationLinks";
+import { UserContext } from "../contexts/UserContext";
 
 export function SidebarComponent() {
-    const [userRole, setUserRole] = useState(
-        localStorage.getItem("judge-project-role")
-    );
-    const [userId, setUserId] = useState(
-        localStorage.getItem("judge-project-uid")
-    );
+    const { user } = useContext(UserContext);
     const [isModalOpen, setIsModalOpen] = useState(false);
-
-    useEffect(() => {
-        setUserRole(localStorage.getItem("judge-project-role"));
-        setUserId(localStorage.getItem("judge-project-uid"));
-    }, []);
+    useEffect(() => {}, [user]);
 
     return (
         <>
@@ -42,7 +34,7 @@ export function SidebarComponent() {
                 </div>
 
                 <List>
-                    <NavLink to={userId ? "/home" : "/"}>
+                    <NavLink to="/">
                         <ListItem>
                             <ListItemPrefix>
                                 <IoIosHome className="h-5 w-5" />
@@ -53,7 +45,7 @@ export function SidebarComponent() {
 
                     <hr className="my-2 border-blue-gray-50" />
 
-                    {!userId ? (
+                    {!user ? (
                         <NavLink to="/login">
                             <ListItem>
                                 <ListItemPrefix>
@@ -67,7 +59,7 @@ export function SidebarComponent() {
                             .filter(
                                 (link) =>
                                     !link.role ||
-                                    (userRole && link.role.includes(userRole))
+                                    (user.role && link.role.includes(user.role))
                             )
                             .map((link) => (
                                 <NavLink key={link.path} to={link.path}>
@@ -83,7 +75,7 @@ export function SidebarComponent() {
 
                     <hr className="my-2 border-blue-gray-50" />
 
-                    {userId && (
+                    {user && (
                         <>
                             <PaperSelectComponent />
                             <Button

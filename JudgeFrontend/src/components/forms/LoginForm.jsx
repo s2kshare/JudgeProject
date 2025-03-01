@@ -33,7 +33,7 @@ export function LoginForm() {
     return (
         <div className=" h-[100vh] flex items-center">
             {isLoading && (
-                <div className=" w-1/2 h-full absolute flex items-center justify-center">
+                <div className=" w-full h-full absolute flex items-center justify-center">
                     <Spinner className=" absolute h-16 w-16 text-gray-900/50" />
                 </div>
             )}

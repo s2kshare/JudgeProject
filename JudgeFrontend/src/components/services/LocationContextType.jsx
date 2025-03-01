@@ -4,7 +4,7 @@ import { useLocation } from "react-router-dom";
 const LocationContext = createContext();
 
 const pathNames = {
-    "/home": "Home",
+    "/": "Home",
     "/dashboard": "Dashboard",
     "/login": "Login",
 };

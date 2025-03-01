@@ -2,7 +2,7 @@ import { Route, Routes, useNavigate } from "react-router-dom";
 import LoginPage from "./pages/LoginPage";
 import UserHomePage from "./pages/UserHomePage";
 import HomePage from "./pages/HomePage";
-import Layout from "./constants/Layout"; // Import the Layout component
+import Layout from "./constants/Layout";
 import DashboardPage from "./pages/DashboardPage";
 import { LocationProvider } from "./components/services/LocationContextType";
 import { useContext, useEffect } from "react";
@@ -14,10 +14,10 @@ function App() {
     const navigate = useNavigate();
 
     useEffect(() => {
-        // if (!user) {
-        //     navigate("/login");
-        // }
-        console.log(user);
+        // If no user is logged in, navigate to login page
+        if (!user) {
+            navigate("/login");
+        }
     }, [user, navigate]);
 
     return (
@@ -28,12 +28,12 @@ function App() {
                 position="bottom-right"
             />
             <Routes>
-                {!user && <Route path="/" element={!user && <HomePage />} />}
+                {/* Protected Routes that require the user to be logged in */}
                 <Route element={<Layout />}>
-                    {user && <Route path="/" element={<UserHomePage />} />}
-                    <Route path="/login" element={<LoginPage />} />
+                    <Route path="/" element={<UserHomePage />} />
                     <Route path="/dashboard" element={<DashboardPage />} />
                     <Route path="/history" element={<>History</>} />
+                    <Route path="/login" element={<LoginPage />} />
                 </Route>
             </Routes>
         </LocationProvider>
