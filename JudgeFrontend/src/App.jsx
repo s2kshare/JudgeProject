@@ -7,6 +7,7 @@ import DashboardPage from "./pages/DashboardPage";
 import { LocationProvider } from "./components/services/LocationContextType";
 import { useContext, useEffect } from "react";
 import { UserContext } from "./contexts/UserContext";
+import { Slide, ToastContainer } from "react-toastify";
 
 function App() {
     const { user } = useContext(UserContext);
@@ -20,6 +21,11 @@ function App() {
 
     return (
         <LocationProvider>
+            <ToastContainer
+                transition={Slide}
+                autoClose={2000}
+                position="bottom-right"
+            />
             <Routes>
                 <Route path="/" element={<HomePage />} />
                 <Route element={<Layout />}>

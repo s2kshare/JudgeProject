@@ -8,6 +8,7 @@ import {
 import { useContext, useEffect, useState } from "react";
 import { UserContext } from "../../contexts/UserContext";
 import { Spinner } from "@material-tailwind/react";
+import { toast } from "react-toastify";
 
 export function LoginForm() {
     const { login } = useContext(UserContext);
@@ -21,7 +22,8 @@ export function LoginForm() {
         try {
             await login(username, password); // Wait for login to complete
         } catch (error) {
-            console.error(error);
+            console.error(error.message);
+            toast.error(error.message);
         } finally {
             setIsLoading(false); // Ensure loading stops even if login fails
         }

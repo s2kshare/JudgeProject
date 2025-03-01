@@ -36,11 +36,10 @@ const UserProvider = ({ children }) => {
                 // localStorage.setItem("judge-project-uid", userId);
                 // localStorage.setItem("judge-project-role", role);
                 // setUser({ id: userId, role });
-                setTimeout(() => navigate("/"), 5000);
                 // navigate("/"); // Redirect after login
             }
         } catch (error) {
-            console.error("Login failed", error);
+            throw error;
         }
     };
 
