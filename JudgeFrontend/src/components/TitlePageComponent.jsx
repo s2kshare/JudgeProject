@@ -3,7 +3,13 @@ import { AvatarDropdownComponent } from "./AvatarDropdownComponent";
 
 export default function TitlePageComponent({ page }) {
     return (
-        <div className="flex items-center w-full my-6">
+        <div
+            className={
+                localStorage.getItem("judge-project-role")
+                    ? "flex items-center w-full my-6"
+                    : "hidden"
+            }
+        >
             {localStorage.getItem("judge-project-role") && (
                 <>
                     <Typography variant="h1" className="flex-1 mt-6 mb-3">

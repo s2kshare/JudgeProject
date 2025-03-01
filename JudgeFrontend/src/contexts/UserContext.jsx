@@ -23,17 +23,21 @@ const UserProvider = ({ children }) => {
 
     const login = async (username, password) => {
         try {
-            const response = await axios.post(baseUrl + "/api/login", {
+            const response = await axios.post(baseUrl + "/auth/login", {
                 username,
                 password,
             });
 
-            if (response.data.success) {
-                const { userId, role } = response.data;
-                localStorage.setItem("judge-project-uid", userId);
-                localStorage.setItem("judge-project-role", role);
-                setUser({ id: userId, role });
-                navigate("/"); // Redirect after login
+            console.log(response);
+
+            if (response.status == 200) {
+                // const { userId, role } = response.data;
+                console.log(response.data);
+                // localStorage.setItem("judge-project-uid", userId);
+                // localStorage.setItem("judge-project-role", role);
+                // setUser({ id: userId, role });
+                setTimeout(() => navigate("/"), 5000);
+                // navigate("/"); // Redirect after login
             }
         } catch (error) {
             console.error("Login failed", error);
@@ -42,7 +46,7 @@ const UserProvider = ({ children }) => {
 
     const logout = async () => {
         try {
-            const response = await axios.post(baseUrl + "/api/logout");
+            const response = await axios.post(baseUrl + "/auth/logout");
 
             if (response.data.success) {
                 localStorage.removeItem("judge-project-uid");
