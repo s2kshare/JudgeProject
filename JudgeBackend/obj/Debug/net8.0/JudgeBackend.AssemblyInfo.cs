@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("JudgeBackend")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+7e6f447646e3b02270fe3aef2e65af68e98f482e")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+0afcd57c787ca59119e1a44f4b2662d0ef746cdc")]
 [assembly: System.Reflection.AssemblyProductAttribute("JudgeBackend")]
 [assembly: System.Reflection.AssemblyTitleAttribute("JudgeBackend")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

@@ -20,7 +20,13 @@ export default function SubmitLabModal({ isOpen, setIsOpen }) {
                         className="fixed inset-0 flex w-screen items-center justify-center p-4 bg-black bg-opacity-50"
                         onClick={() => setIsOpen(false)}
                     >
-                        <SubmitLabForm />
+                        {/* New wrapper div to prevent clicks inside from propagating */}
+                        <div
+                            className="bg-white p-6 rounded-lg shadow-lg w-1/2"
+                            onClick={(e) => e.stopPropagation()}
+                        >
+                            <SubmitLabForm />
+                        </div>
                     </motion.div>
                 </Dialog>
             )}
