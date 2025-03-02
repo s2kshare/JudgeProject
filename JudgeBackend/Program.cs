@@ -39,7 +39,7 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
         options.LogoutPath = "/auth/logout";
         options.Cookie.HttpOnly = true;
         options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
-        options.ExpireTimeSpan = TimeSpan.FromHours(1); // Expiration time
+        options.ExpireTimeSpan = TimeSpan.FromHours(5); // Expiration time
         options.SlidingExpiration = true; // Refresh expiration on activity
     });
 builder.Services.AddAuthorization();

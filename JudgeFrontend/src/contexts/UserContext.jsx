@@ -2,6 +2,7 @@ import { createContext } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { toast } from "react-toastify";
 
 const UserContext = createContext();
 const baseUrl = import.meta.env.VITE_BASE_URL;
@@ -49,8 +50,9 @@ const UserProvider = ({ children }) => {
                 );
                 return response.data;
             }
-
-            throw new Error("Login failed");
+        },
+        onError: (error) => {
+            toast.error(error.message);
         },
         onSuccess: (data) => {
             queryClient.setQueryData(["user"], {
@@ -58,6 +60,7 @@ const UserProvider = ({ children }) => {
                 role: data.role,
                 username: data.username,
             });
+            toast.success("Login successful");
             setTimeout(() => navigate("/"), 0);
         },
     });
@@ -65,11 +68,16 @@ const UserProvider = ({ children }) => {
     // Logout Mutation
     const logoutMutation = useMutation({
         mutationFn: async () => {
-            await axios.post(baseUrl + "/auth/logout");
             localStorage.removeItem("judge-project-user");
+            queryClient.setQueryData(["user"], null);
+            await axios.post(baseUrl + "/auth/logout");
         },
         onSuccess: () => {
-            queryClient.setQueryData(["user"], null);
+            toast.success("Logout successful");
+            setTimeout(() => navigate("/login"), 0);
+        },
+        onError: (error) => {
+            toast.error(error.message);
             setTimeout(() => navigate("/login"), 0);
         },
     });
@@ -82,6 +90,8 @@ const UserProvider = ({ children }) => {
                     loginMutation.mutate({ username, password }),
                 logout: () => logoutMutation.mutate(),
                 isLoading,
+                isError: loginMutation.isError,
+                error: loginMutation.error,
             }}
         >
             {children}
