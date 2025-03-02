@@ -1,6 +1,6 @@
 import { Card, Typography } from "@material-tailwind/react";
 
-const TABLE_HEAD = ["Name", "Job", "Employed", ""];
+const TABLE_HEAD = ["Lab", "Result", "Date", ""];
 
 const TABLE_ROWS = [
     {
@@ -90,7 +90,11 @@ export default function SubmissionListComponent() {
                             : "p-4 border-b border-blue-gray-50";
 
                         return (
-                            <tr key={index}>
+                            <tr
+                                className="hover:cursor-pointer hover:bg-blue-gray-50 transition-colors"
+                                key={index}
+                                onClick={() => alert("clicked")}
+                            >
                                 <td className={classes}>
                                     <Typography
                                         variant="small"

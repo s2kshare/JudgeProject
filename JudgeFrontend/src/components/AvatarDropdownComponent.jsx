@@ -54,9 +54,12 @@ export function AvatarDropdownComponent() {
                 <Button
                     variant="text"
                     color="blue-gray"
-                    className="flex items-center rounded-full p-0"
+                    className="flex items-center justify-center rounded-full w-10 h-10 bg-blue-gray-300 hover:bg-blue-gray-200 p-0.5"
                 >
-                    <Avatar
+                    <h1 className="text-white hover:text-black transition-colors w-full h-full flex items-center justify-center">
+                        T
+                    </h1>
+                    {/* <Avatar
                         variant="circular"
                         size="md"
                         alt="tania andrew"
@@ -64,7 +67,7 @@ export function AvatarDropdownComponent() {
                         color="blue-gray"
                         className=" p-0.5"
                         src="https://docs.material-tailwind.com/img/face-2.jpg"
-                    />
+                    /> */}
                 </Button>
             </MenuHandler>
             <MenuList className="p-1">

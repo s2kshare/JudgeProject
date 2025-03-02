@@ -10,6 +10,8 @@ export function LoginForm() {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
 
+    console.log(isLoading);
+
     const handleLoginRequest = async (e) => {
         e.preventDefault();
 
