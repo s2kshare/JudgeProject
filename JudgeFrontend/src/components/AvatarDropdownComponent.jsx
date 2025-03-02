@@ -38,12 +38,12 @@ export function AvatarDropdownComponent() {
         {
             label: "My Profile",
             icon: UserCircleIcon,
-            action: () => console.log("My Profile clicked"),
+            // action: () => console.log("My Profile clicked"),
         },
         {
             label: "Edit Profile",
             icon: Cog6ToothIcon,
-            action: () => console.log("Edit Profile clicked"),
+            // action: () => console.log("Edit Profile clicked"),
         },
         {
             label: "Sign Out",

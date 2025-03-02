@@ -40,7 +40,7 @@ public class AuthController : Controller
 
         await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, claimsPrincipal);
 
-        return Ok(new { message = "Login Successful", user.Role });
+        return Ok(new { message = "Login Successful", user.ID, user.Role, user.Username });
     }
 
     [Authorize]
