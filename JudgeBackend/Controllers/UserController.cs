@@ -52,7 +52,7 @@ public class UserController : Controller
     /// </summary>
     /// <returns>List of papers and labs enrolled in</returns>
     [HttpGet("student-home")]
-    [Authorize(Roles = "Student,Admin")]
+    [Authorize(Roles = "Student")]
     public async Task<IActionResult> GetStudentPapersAndLabs()
     {
         // Check if user is authenticated
@@ -93,22 +93,35 @@ public class UserController : Controller
         return Ok(result);
     }
 
-    
+    /// <summary>
+    /// Endpoint to enroll a student in a paper. Accessible by Admins and Teachers.
+    /// </summary>
+    /// <param name="request">The enrollment request containing student and paper IDs.</param>
+    /// <returns>ActionResult indicating the result of the enrollment attempt.</returns>
     [HttpPost("enroll")]
     [Authorize(Roles = "Admin,Teacher")]
     public async Task<IActionResult> EnrollStudent([FromBody] StudentEnrollmentRequest request)
     {
+        // Call the user service to enroll the student in the specified paper
         var result = await _userService.EnrollStudentInPaper(request.StudentID, request.PaperID);
+
+        // Return Ok response if enrollment was successful, otherwise return BadRequest
         return result ? Ok("Student enrolled successfully.") : BadRequest("Failed to enroll student.");
     }
 
+    /// <summary>
+    /// Endpoint to remove a student from a paper. Accessible by Admins and Teachers.
+    /// </summary>
+    /// <param name="request">The enrollment request containing student and paper IDs.</param>
+    /// <returns>ActionResult indicating the result of the removal attempt.</returns>
     [HttpDelete("enroll")]
     [Authorize(Roles = "Admin,Teacher")]
     public async Task<IActionResult> RemoveStudent([FromBody] StudentEnrollmentRequest request)
     {
+        // Call the user service to remove the student from the specified paper
         var result = await _userService.RemoveStudentFromPaper(request.StudentID, request.PaperID);
+
+        // Return Ok response if removal was successful, otherwise return NotFound
         return result ? Ok("Student removed successfully.") : NotFound("Student not found in this paper.");
     }
-
-    
 }

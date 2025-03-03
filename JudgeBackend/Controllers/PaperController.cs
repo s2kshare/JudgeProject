@@ -14,9 +14,22 @@ public class PaperController : ControllerBase
         _paperService = paperService;
     }
     
+    /// <summary>
+    /// Endpoint to retrieve all papers. Accessible by all authenticated users.
+    /// </summary>
+    /// <returns>List of all papers.</returns>
     [HttpGet]
-    public async Task<IActionResult> GetPapers() => Ok(await _paperService.GetAllPapers());
+    public async Task<IActionResult> GetPapers()
+    {
+        var papers = await _paperService.GetAllPapers();
+        return Ok(papers);
+    }
 
+    /// <summary>
+    /// Endpoint to create a new paper. Accessible by Admins and Teachers.
+    /// </summary>
+    /// <param name="paper">The paper details for creation.</param>
+    /// <returns>ActionResult indicating the result of the paper creation attempt.</returns>
     [HttpPost]
     public async Task<IActionResult> CreatePaper(PaperCreate paper)
     {
