@@ -17,47 +17,98 @@ public class UserController : Controller
         _userService = userService;
     }
 
+    /// <summary>
+    /// Endpoint to retrieve all users. Accessible by Admins and Teachers.
+    /// </summary>
+    /// <returns>List of all users.</returns>
     [HttpGet]
     [Authorize(Roles = "Admin,Teacher")]
-    public async Task<IActionResult> GetUsers() => Ok(await _userService.GetAllUsers());
+    public async Task<IActionResult> GetUsers()
+    {
+        // Retrieve all users from the user service
+        var users = await _userService.GetAllUsers();
+        // Return the list of users in the response
+        return Ok(users);
+    }
 
+    /// <summary>
+    /// Endpoint to create a new user. Accessible by Admins and Teachers.
+    /// </summary>
+    /// <param name="user">The user details for creation.</param>
+    /// <returns>ActionResult indicating the result of the user creation attempt.</returns>
     [HttpPost]
     [Authorize(Roles = "Admin,Teacher")]
     public async Task<IActionResult> CreateUser(UserCreate user)
     {
+        // Call the user service to create a new user
         var newuser = await _userService.CreateUser(user);
-        return CreatedAtAction(nameof(GetUsers), new { id = newuser?.ID}, user);
+        
+        // Return a Created response with the new user's ID if creation was successful
+        return CreatedAtAction(nameof(GetUsers), new { id = newuser?.ID }, user);
     }
 
-    // Student Endpoint Grab User Papers and Labs
-    [HttpGet("papers-labs")]
-    public async Task<IActionResult> GetUserPapersAndLabs()
+    /// <summary>
+    /// Endpoint for Students to view enrolled papers and labs
+    /// </summary>
+    /// <returns>List of papers and labs enrolled in</returns>
+    [HttpGet("student-home")]
+    [Authorize(Roles = "Student,Admin")]
+    public async Task<IActionResult> GetStudentPapersAndLabs()
     {
-        if (!User.Identity!.IsAuthenticated) return Unauthorized("User is not Logged In. Please Login.");
+        // Check if user is authenticated
+        if (!User.Identity!.IsAuthenticated)
+            return Unauthorized("User is not Logged In. Please Login.");
 
+        // Get the username from the ClaimsPrincipal
         var username = User.Identity.Name;
-        var role = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value;
+        if (string.IsNullOrEmpty(username))
+            return BadRequest("Username is Null or Empty.");
 
-        if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(role))
-            return Unauthorized("Invalid user session.");
+        // Check if the user exists
+        if (await _userService.UserExists(username) == false)
+            return BadRequest("Invalid user session. Either Cookie has Expired or User is not logged in. Please Login Again.");
 
-        if (role != "Student") return Forbid("Access to this Endpoint is Denied. Only Students can retrieve enrolled papers.");
+        // Get the student with enrolled papers and labs from the database
+        var student = await _userService.GetStudentWithPaperAndLabs(username);
+        if (student == null)
+            return NotFound("No papers were found for this student.");
 
-        var student = await _userService.GetStudentByUsername(username);
-
-        // Map enrolled papers and labs
-        var result = student!.EnrolledPapers.Select(p => new
+        // Create a result object to return
+        var result = new
         {
-            PaperID = p.Paper.ID,
-            PaperName = p.Paper.Name,
-            Labs = p.Paper.Labs.Select(l => new
+            papers = student.EnrolledPapers.Select(p => new
             {
-                LabID = l.ID,
-                LabName = l.Name,
-                LabDescription = l.Description
+                paperID = p.Paper.ID,
+                paperName = p.Paper.Name,
+                labs = p.Paper.Labs.Select(l => new
+                {
+                    labID = l.ID,
+                    labName = l.Name,
+                    labDescription = l.Description
+                }).ToList()
             }).ToList()
-        }).ToList();
+        };
 
+        // Return the result
         return Ok(result);
     }
+
+    
+    [HttpPost("enroll")]
+    [Authorize(Roles = "Admin,Teacher")]
+    public async Task<IActionResult> EnrollStudent([FromBody] StudentEnrollmentRequest request)
+    {
+        var result = await _userService.EnrollStudentInPaper(request.StudentID, request.PaperID);
+        return result ? Ok("Student enrolled successfully.") : BadRequest("Failed to enroll student.");
+    }
+
+    [HttpDelete("enroll")]
+    [Authorize(Roles = "Admin,Teacher")]
+    public async Task<IActionResult> RemoveStudent([FromBody] StudentEnrollmentRequest request)
+    {
+        var result = await _userService.RemoveStudentFromPaper(request.StudentID, request.PaperID);
+        return result ? Ok("Student removed successfully.") : NotFound("Student not found in this paper.");
+    }
+
+    
 }

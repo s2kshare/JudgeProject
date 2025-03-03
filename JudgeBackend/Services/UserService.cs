@@ -79,13 +79,69 @@ namespace JudgeBackend.Services
             }).ToListAsync();
         }
 
-        public async Task<Student?> GetUserWithPaperAndLabs(int userID)
-            => await _context.Students.Include(s => s.EnrolledPapers).ThenInclude(sp => sp.Paper).ThenInclude(p => p.Labs).FirstOrDefaultAsync(s => s.ID == userID);
+        public async Task<Student?> GetStudentWithPaperAndLabs(string username)
+        {
+            return await _context.Students
+                .Include(s => s.EnrolledPapers)
+                .ThenInclude(sp => sp.Paper)
+                .ThenInclude(p => p.Labs)
+                .FirstOrDefaultAsync(s => s.Username == username);
+        }
+
+        
 
         public async Task<Student?> GetStudentByUsername(string username)
         {
             var student = await _context.Users.OfType<Student>().FirstOrDefaultAsync(u => u.Username == username);
             return student;
+        }
+
+        public async Task<bool> EnrollStudentInPaper(int studentID, int paperID)
+        {
+            var student = await _context.Students.FindAsync(studentID);
+            var paper = await _context.Papers.FindAsync(paperID);
+    
+            Console.WriteLine($"[!] Enrolling student {studentID} in paper {paperID}");
+
+            if (student == null || paper == null) return false;
+
+            var existingEnrollment = await _context.StudentPapers
+                .FirstOrDefaultAsync(sp => sp.StudentID == studentID && sp.PaperID == paperID);
+
+            Console.WriteLine($"[!] Existing enrollment: {existingEnrollment}");
+    
+            if (existingEnrollment != null) return false; // Already enrolled
+
+            Console.WriteLine($"[!] Existing enrollment: {existingEnrollment}");
+
+            var enrollment = new StudentPaper
+            {
+                StudentID = studentID,
+                PaperID = paperID
+            };
+
+            Console.WriteLine($"[!] {enrollment.ID} and {enrollment.PaperID}");
+
+            _context.StudentPapers.Add(enrollment);
+            await _context.SaveChangesAsync();
+            return true;
+        }
+
+        public async Task<bool> RemoveStudentFromPaper(int studentID, int paperID)
+        {
+            var enrollment = await _context.StudentPapers
+                .FirstOrDefaultAsync(sp => sp.StudentID == studentID && sp.PaperID == paperID);
+    
+            if (enrollment == null) return false; // Not found
+
+            _context.StudentPapers.Remove(enrollment);
+            await _context.SaveChangesAsync();
+            return true;
+        }
+
+        public Task<bool> UserExists(string username)
+        {
+            return _context.Users.AnyAsync(u => u.Username == username);
         }
     }
 }

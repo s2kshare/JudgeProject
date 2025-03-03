@@ -55,8 +55,8 @@ using (var scope = app.Services.CreateScope())
     var services = scope.ServiceProvider;
     var dbContext = services.GetRequiredService<ApplicationDbContext>();
     dbContext.Database.Migrate();
-    SeedAdminUser(dbContext);
-    SeedDummyData(dbContext);
+    // SeedAdminUser(dbContext);
+    // SeedDummyData(dbContext);
 }
 
 // Configure the HTTP request pipeline.
