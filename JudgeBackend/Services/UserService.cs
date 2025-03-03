@@ -49,7 +49,7 @@ namespace JudgeBackend.Services
 
                     return AddUser(newTeacher);
                 default:
-                    var newStudent = new Teacher
+                    var newStudent = new Student
                     {
                         FirstName = user.FirstName,
                         LastName = user.LastName,
@@ -98,33 +98,58 @@ namespace JudgeBackend.Services
 
         public async Task<bool> EnrollStudentInPaper(int studentID, int paperID)
         {
-            var student = await _context.Students.FindAsync(studentID);
+            Console.WriteLine("[!] Enrolling student in paper");
+            Console.WriteLine("[!] Student ID: " + studentID);
+            Console.WriteLine("[!] Paper ID: " + paperID);
+
+            var users = await _context.Users.ToListAsync();
+            foreach (var user in users)
+            {
+                Console.WriteLine("[!] User: " + user.ID + " | " + user.Username + " | " + user.Role);
+            }
+
+            var student = await _context.Users
+                .OfType<Student>()  // This ensures you only get Student objects
+                .Include(s => s.EnrolledPapers)
+                .ThenInclude(sp => sp.Paper)
+                .FirstOrDefaultAsync(s => s.ID == studentID);
+
             var paper = await _context.Papers.FindAsync(paperID);
-    
-            Console.WriteLine($"[!] Enrolling student {studentID} in paper {paperID}");
 
-            if (student == null || paper == null) return false;
+            if (student == null)
+            {
+                Console.WriteLine($"[!] Student with ID {studentID} not found.");
+                return false; // Or throw an exception or return an error result as needed
+            }
 
+            if (paper == null)
+            {
+                Console.WriteLine($"[!] Paper with ID {paperID} not found.");
+                return false; // Or throw an exception or return an error result as needed
+            }
+
+            // Check if the student is already enrolled in the paper
             var existingEnrollment = await _context.StudentPapers
                 .FirstOrDefaultAsync(sp => sp.StudentID == studentID && sp.PaperID == paperID);
 
-            Console.WriteLine($"[!] Existing enrollment: {existingEnrollment}");
-    
-            if (existingEnrollment != null) return false; // Already enrolled
+            if (existingEnrollment != null)
+            {
+                Console.WriteLine("[!] Student already enrolled in this paper");
+                return false; // Already enrolled
+            }
 
-            Console.WriteLine($"[!] Existing enrollment: {existingEnrollment}");
-
+            // Enroll the student
             var enrollment = new StudentPaper
             {
                 StudentID = studentID,
                 PaperID = paperID
             };
 
-            Console.WriteLine($"[!] {enrollment.ID} and {enrollment.PaperID}");
-
             _context.StudentPapers.Add(enrollment);
             await _context.SaveChangesAsync();
+            Console.WriteLine("[!] Student enrolled successfully");
             return true;
+
         }
 
         public async Task<bool> RemoveStudentFromPaper(int studentID, int paperID)
