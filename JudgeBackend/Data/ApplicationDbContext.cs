@@ -13,6 +13,7 @@ namespace JudgeBackend.Data
         public DbSet<Paper> Papers { get; set; }
         public DbSet<Lab> Labs { get; set; }
         public DbSet<Submission> Submissions { get; set; }
+        public DbSet<StudentPaper> StudentPapers { get; set; }
     
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
