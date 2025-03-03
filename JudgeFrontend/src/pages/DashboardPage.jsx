@@ -5,13 +5,15 @@ import {
     Tab,
     TabPanel,
 } from "@material-tailwind/react";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import StudentManagement from "../components/dashboard/StudentManagement";
 import LabManagement from "../components/dashboard/LabManagement";
 import PaperManagement from "../components/dashboard/PaperManagement";
+import { UserContext } from "../contexts/UserContext";
 
 export default function DashboardPage() {
     const [activeTab, setActiveTab] = useState("students");
+    const { user } = useContext(UserContext);
 
     const data = [
         {
@@ -38,15 +40,11 @@ export default function DashboardPage() {
     return (
         <Tabs id="custom-animation" value="students">
             <TabsHeader>
-                {data.map(({ label, value, role }, index) => (
+                {data.map(({ label, value, role }) => (
                     <Tab
                         key={value}
                         value={value}
-                        disabled={
-                            !role.includes(
-                                localStorage.getItem("judge-project-role")
-                            )
-                        }
+                        disabled={!user || !role.includes(user.role)} // Check user role
                         onClick={() => setActiveTab(value)}
                         className={activeTab === value ? "text-gray-900" : ""}
                     >

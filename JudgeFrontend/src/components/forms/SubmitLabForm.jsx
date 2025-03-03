@@ -1,53 +1,53 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { IoCloudUploadOutline } from "react-icons/io5";
 import { motion } from "motion/react";
 import {
     Card,
     CardHeader,
     CardBody,
-    Input,
     Button,
     Typography,
-    Tabs,
-    TabsHeader,
-    TabsBody,
-    Tab,
-    TabPanel,
-    Select,
-    Option,
 } from "@material-tailwind/react";
 import { LabSelect } from "../selects/LabSelect";
 import { PaperSelect } from "../selects/PaperSelect";
 
-function formatCardNumber(value) {
-    const val = value.replace(/\s+/g, "").replace(/[^0-9]/gi, "");
-    const matches = val.match(/\d{4,16}/g);
-    const match = (matches && matches[0]) || "";
-    const parts = [];
-
-    for (let i = 0, len = match.length; i < len; i += 4) {
-        parts.push(match.substring(i, i + 4));
-    }
-
-    return parts.length ? parts.join(" ") : value;
-}
-
 export default function SubmitLabForm() {
-    const [type, setType] = useState("card");
-    const [cardNumber, setCardNumber] = useState("");
+    const fileInputRef = useRef(null);
+    const [files, setFiles] = useState(null);
 
+    const handleSubmission = (e) => {
+        e.preventDefault();
+    };
+
+    /**
+     * Handles the event when files are dropped onto the designated area.
+     * Prevents the default behavior and stops propagation of the event.
+     * Sets the dropped files using the setFiles state function if any files are present.
+     * Logs the dropped files to the console.
+     *
+     * @param {Event} e - The event triggered by dropping files.
+     */
     const handleFileDrop = (e) => {
         e.preventDefault();
         e.stopPropagation();
-        console.log("hehe");
         const files = e.dataTransfer.files;
         if (files.length > 0) {
             console.log("Dropped files:", files);
+            setFiles(files);
         }
     };
 
+    const handleFileChange = (e) => {
+        console.log("Imported Files:", e.target.files);
+        setFiles(files);
+    };
+
+    const openFileExplorer = () => {
+        fileInputRef.current.click();
+    };
+
     return (
-        <Card className="w-full max-w-[32rem]">
+        <Card className="w-full">
             <CardHeader
                 color="gray"
                 floated={false}
@@ -72,14 +72,11 @@ export default function SubmitLabForm() {
                     <div>
                         <div
                             onDrop={handleFileDrop}
-                            onDragOver={(e) => e.preventDefault()} // Prevent default behavior here too
-                            onDragEnter={() => {
-                                console.log("entered");
+                            onDragOver={(e) => {
+                                e.preventDefault();
                             }}
-                            onDragExit={() => {
-                                console.log("exited");
-                            }}
-                            className="h-40 flex items-center justify-center"
+                            onClick={openFileExplorer}
+                            className="h-40 flex items-center justify-center cursor-pointer"
                         >
                             <motion.div
                                 layout
@@ -87,7 +84,7 @@ export default function SubmitLabForm() {
                                     scale: 0.95,
                                     backgroundColor: "#f3f4f6",
                                 }}
-                                className="flex hover:cursor-pointer items-center justify-center w-full h-full border-2 border-blue-gray-100 bg-blue-gray-50 rounded-md"
+                                className="flex items-center justify-center w-full h-full border-2 border-blue-gray-100 bg-blue-gray-50 rounded-md"
                             >
                                 <Typography
                                     variant="h6"
@@ -98,8 +95,17 @@ export default function SubmitLabForm() {
                                 </Typography>
                             </motion.div>
                         </div>
+                        <input
+                            type="file"
+                            ref={fileInputRef}
+                            className="hidden"
+                            multiple
+                            onChange={handleFileChange}
+                        />
                     </div>
-                    <Button size="lg">Submit</Button>
+                    <Button size="lg" onClick={handleSubmission}>
+                        Submit
+                    </Button>
                 </form>
             </CardBody>
         </Card>

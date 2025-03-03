@@ -101,7 +101,7 @@ namespace JudgeBackend.Migrations
 
                     b.HasIndex("StudentID");
 
-                    b.ToTable("StudentPaper");
+                    b.ToTable("StudentPapers");
                 });
 
             modelBuilder.Entity("JudgeBackend.Models.Submission", b =>

@@ -1,73 +1,99 @@
-import { createContext, useEffect, useState } from "react";
+import { createContext } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { toast } from "react-toastify";
 
 const UserContext = createContext();
 const baseUrl = import.meta.env.VITE_BASE_URL;
 axios.defaults.withCredentials = true;
 
+const fetchUser = async () => {
+    const userObject = localStorage.getItem("judge-project-user");
+    var user = JSON.parse(userObject);
+
+    if (user) {
+        return user;
+    }
+
+    return null;
+};
+
 const UserProvider = ({ children }) => {
     const navigate = useNavigate();
-    const [user, setUser] = useState(null);
+    const queryClient = useQueryClient();
 
-    useEffect(() => {
-        const storedUID = localStorage.getItem("judge-project-uid");
-        const storedRole = localStorage.getItem("judge-project-role");
+    // Fetch user from local storage (or API)
+    const { data: user, isLoading } = useQuery({
+        queryKey: ["user"],
+        queryFn: fetchUser,
+        staleTime: Infinity,
+    });
 
-        if (storedUID && storedRole) {
-            setUser({ id: storedUID, role: storedRole });
-        }
-        // else {
-        //     navigate("/");
-        // }
-    }, []);
-
-    const login = async (username, password) => {
-        try {
+    // Login Mutation
+    const loginMutation = useMutation({
+        mutationFn: async ({ username, password }) => {
             const response = await axios.post(baseUrl + "/auth/login", {
                 username,
                 password,
             });
 
-            console.log(response);
-
-            if (response.status == 200) {
-                console.log(response.data);
-                const { role } = response.data;
-                localStorage.setItem("judge-project-role", role);
-                setUser({ role });
-                navigate("/");
-                return true;
+            if (response.status === 200) {
+                var user = {
+                    id: response.data.id,
+                    role: response.data.role,
+                    username: response.data.username,
+                };
+                localStorage.setItem(
+                    "judge-project-user",
+                    JSON.stringify(user)
+                );
+                return response.data;
             }
-        } catch (error) {
-            throw error;
-        }
-    };
+        },
+        onError: (error) => {
+            toast.error(error.message);
+        },
+        onSuccess: (data) => {
+            queryClient.setQueryData(["user"], {
+                id: data.id,
+                role: data.role,
+                username: data.username,
+            });
+            toast.success("Login successful");
+            setTimeout(() => navigate("/"), 0);
+        },
+    });
 
-    const logout = async () => {
-        try {
-            console.log(baseUrl + "/auth/logout");
-            const response = await axios.post(baseUrl + "/auth/logout");
-
-            if (response.status == 200) {
-                localStorage.removeItem("judge-project-uid");
-                localStorage.removeItem("judge-project-role");
-                setUser(null);
-                navigate("/login");
-            }
-
-            return response;
-        } catch (error) {
-            console.error("Login failed", error);
-        }
-    };
-
-    const submitLab = () => {
-        console.log("submitting lab");
-    };
+    // Logout Mutation
+    const logoutMutation = useMutation({
+        mutationFn: async () => {
+            localStorage.removeItem("judge-project-user");
+            queryClient.setQueryData(["user"], null);
+            await axios.post(baseUrl + "/auth/logout");
+        },
+        onSuccess: () => {
+            toast.success("Logout successful");
+            setTimeout(() => navigate("/login"), 0);
+        },
+        onError: (error) => {
+            toast.error(error.message);
+            setTimeout(() => navigate("/login"), 0);
+        },
+    });
 
     return (
-        <UserContext.Provider value={{ user, login, logout }}>
+        <UserContext.Provider
+            value={{
+                user,
+                login: (username, password) =>
+                    loginMutation.mutate({ username, password }),
+                logout: () => logoutMutation.mutate(),
+                isLoading,
+                isError: loginMutation.isError,
+                error: loginMutation.error,
+            }}
+        >
             {children}
         </UserContext.Provider>
     );

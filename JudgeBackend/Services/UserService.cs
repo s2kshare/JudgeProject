@@ -78,5 +78,14 @@ namespace JudgeBackend.Services
                 Role = u.Role
             }).ToListAsync();
         }
+
+        public async Task<Student?> GetUserWithPaperAndLabs(int userID)
+            => await _context.Students.Include(s => s.EnrolledPapers).ThenInclude(sp => sp.Paper).ThenInclude(p => p.Labs).FirstOrDefaultAsync(s => s.ID == userID);
+
+        public async Task<Student?> GetStudentByUsername(string username)
+        {
+            var student = await _context.Users.OfType<Student>().FirstOrDefaultAsync(u => u.Username == username);
+            return student;
+        }
     }
 }

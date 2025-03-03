@@ -11,7 +11,7 @@ const pathNames = {
 
 export const LocationProvider = ({ children }) => {
     const location = useLocation();
-    console.log(pathNames[location.pathname]);
+    // console.log(pathNames[location.pathname]);
     const [path, setPath] = useState(pathNames[location.pathname] || "Home");
 
     useEffect(() => {

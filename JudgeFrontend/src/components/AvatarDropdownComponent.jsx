@@ -15,47 +15,38 @@ import {
 } from "@heroicons/react/24/solid";
 import { useNavigate } from "react-router-dom";
 import { UserContext } from "../contexts/UserContext";
+import { toast } from "react-toastify";
 
 export function AvatarDropdownComponent() {
     const navigate = useNavigate();
+    const { logout } = useContext(UserContext);
+    const [isMenuOpen, setIsMenuOpen] = React.useState(false);
 
-    const handleLogoutRequest = async (e) => {
+    const handleLogout = async (e) => {
+        e.preventDefault();
         try {
-            var logoutRequest = await logout(username, password); // Wait for login to complete
-            if (loginRequest) toast.success("Login Successful");
+            await logout(); // Calls logout mutation from context
         } catch (error) {
             console.error(error.message);
-            toast.error(error.message);
-        } finally {
-            setIsLoading(false); // Ensure loading stops even if login fails
+            toast.error("Logout failed");
         }
     };
 
-    const [isMenuOpen, setIsMenuOpen] = React.useState(false);
-
-    const { logout } = useContext(UserContext);
     const profileMenuItems = [
         {
             label: "My Profile",
             icon: UserCircleIcon,
-            action: () => console.log("My Profile clicked"),
         },
         {
             label: "Edit Profile",
             icon: Cog6ToothIcon,
-            action: () => console.log("Edit Profile clicked"),
         },
         {
             label: "Sign Out",
             icon: PowerIcon,
-            action: (e, navigate) => {
-                e.preventDefault();
-                logout();
-            },
+            action: handleLogout, // Directly using handleLogout
         },
     ];
-
-    const closeMenu = () => setIsMenuOpen(false);
 
     return (
         <Menu open={isMenuOpen} handler={setIsMenuOpen} placement="bottom-end">
@@ -63,9 +54,12 @@ export function AvatarDropdownComponent() {
                 <Button
                     variant="text"
                     color="blue-gray"
-                    className="flex items-center rounded-full p-0"
+                    className="flex items-center justify-center rounded-full w-10 h-10 bg-blue-gray-300 hover:bg-blue-gray-200 p-0.5"
                 >
-                    <Avatar
+                    <h1 className="text-white hover:text-black transition-colors w-full h-full flex items-center justify-center">
+                        T
+                    </h1>
+                    {/* <Avatar
                         variant="circular"
                         size="md"
                         alt="tania andrew"
@@ -73,7 +67,7 @@ export function AvatarDropdownComponent() {
                         color="blue-gray"
                         className=" p-0.5"
                         src="https://docs.material-tailwind.com/img/face-2.jpg"
-                    />
+                    /> */}
                 </Button>
             </MenuHandler>
             <MenuList className="p-1">
@@ -83,8 +77,8 @@ export function AvatarDropdownComponent() {
                         <MenuItem
                             key={label}
                             onClick={(e) => {
-                                action(e, navigate);
-                                closeMenu();
+                                if (action) action(e);
+                                setIsMenuOpen(false);
                             }}
                             className={`flex items-center gap-2 rounded ${
                                 isLastItem
