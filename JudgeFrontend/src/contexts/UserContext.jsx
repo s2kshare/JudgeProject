@@ -8,6 +8,7 @@ const UserContext = createContext();
 const baseUrl = import.meta.env.VITE_BASE_URL;
 axios.defaults.withCredentials = true;
 
+// Fetch user from localStorage or API
 const fetchUser = async () => {
     const userObject = localStorage.getItem("judge-project-user");
     var user = JSON.parse(userObject);
@@ -19,6 +20,27 @@ const fetchUser = async () => {
     return null;
 };
 
+// Fetch user home based on role
+const fetchUserHome = async (username, role) => {
+    if (!role) return;
+
+    let response;
+    switch (role) {
+        case "Admin":
+            response = await axios.get(baseUrl + "/users/admin-home");
+            break;
+        case "Teacher":
+            response = await axios.get(baseUrl + "/users/teacher-home");
+            break;
+        case "Student":
+            response = await axios.get(baseUrl + "/users/student-home");
+            break;
+        default:
+            return null;
+    }
+    return response.data;
+};
+
 const UserProvider = ({ children }) => {
     const navigate = useNavigate();
     const queryClient = useQueryClient();
@@ -27,6 +49,14 @@ const UserProvider = ({ children }) => {
     const { data: user, isLoading } = useQuery({
         queryKey: ["user"],
         queryFn: fetchUser,
+        staleTime: Infinity,
+    });
+
+    // Fetch home data once the user is available
+    const { data: userHome, isLoading: isHomeLoading } = useQuery({
+        queryKey: ["userHome", user?.username],
+        queryFn: () => fetchUserHome(user?.username, user?.role),
+        enabled: !!user, // Only fetch user home when user is available
         staleTime: Infinity,
     });
 
@@ -86,10 +116,12 @@ const UserProvider = ({ children }) => {
         <UserContext.Provider
             value={{
                 user,
+                userHome,
                 login: (username, password) =>
                     loginMutation.mutate({ username, password }),
                 logout: () => logoutMutation.mutate(),
                 isLoading,
+                isHomeLoading,
                 isError: loginMutation.isError,
                 error: loginMutation.error,
             }}

@@ -14,19 +14,20 @@ import { PaperSelect } from "../selects/PaperSelect";
 export default function SubmitLabForm() {
     const fileInputRef = useRef(null);
     const [files, setFiles] = useState(null);
+    const [selectedPaper, setSelectedPaper] = useState(""); // State for selected paper
+    const [selectedLab, setSelectedLab] = useState(""); // State for selected lab
 
     const handleSubmission = (e) => {
         e.preventDefault();
+
+        // Capture the selected paper, lab, and files before submission
+        console.log("Selected Paper:", selectedPaper);
+        console.log("Selected Lab:", selectedLab);
+        console.log("Submitted Files:", files);
+
+        // Here you can implement further logic to submit the form
     };
 
-    /**
-     * Handles the event when files are dropped onto the designated area.
-     * Prevents the default behavior and stops propagation of the event.
-     * Sets the dropped files using the setFiles state function if any files are present.
-     * Logs the dropped files to the console.
-     *
-     * @param {Event} e - The event triggered by dropping files.
-     */
     const handleFileDrop = (e) => {
         e.preventDefault();
         e.stopPropagation();
@@ -39,7 +40,7 @@ export default function SubmitLabForm() {
 
     const handleFileChange = (e) => {
         console.log("Imported Files:", e.target.files);
-        setFiles(files);
+        setFiles(e.target.files);
     };
 
     const openFileExplorer = () => {
@@ -64,10 +65,16 @@ export default function SubmitLabForm() {
             <CardBody>
                 <form className="mt-0 flex flex-col gap-4">
                     <div>
-                        <PaperSelect />
+                        <PaperSelect
+                            setSelectedPaper={setSelectedPaper} // Pass handler to update paper selection
+                        />
                     </div>
                     <div>
-                        <LabSelect />
+                        <LabSelect
+                            selectedPaper={selectedPaper} // Pass handler to update lab selection
+                            selectedLab={selectedLab}
+                            setSelectedLab={setSelectedLab}
+                        />
                     </div>
                     <div>
                         <div

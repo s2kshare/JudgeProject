@@ -88,8 +88,6 @@ namespace JudgeBackend.Services
                 .FirstOrDefaultAsync(s => s.Username == username);
         }
 
-        
-
         public async Task<Student?> GetStudentByUsername(string username)
         {
             var student = await _context.Users.OfType<Student>().FirstOrDefaultAsync(u => u.Username == username);

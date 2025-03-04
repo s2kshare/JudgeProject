@@ -11,15 +11,19 @@ import {
 import { IoCloudUploadOutline } from "react-icons/io5";
 import { IoIosHome } from "react-icons/io";
 import { UserCircleIcon } from "@heroicons/react/24/solid";
-import { PaperSelectComponent } from "./PaperSelectComponent";
+import { PaperSelect } from "./selects/PaperSelect";
 import SubmitLabModal from "./modals/SubmitLabModal";
 import { navigation_links } from "../constants/navigationLinks";
 import { UserContext } from "../contexts/UserContext";
 
 export function SidebarComponent() {
-    const { user } = useContext(UserContext);
+    const { user, userHome, isHomeLoading } = useContext(UserContext);
     const [isModalOpen, setIsModalOpen] = useState(false);
     useEffect(() => {}, [user]);
+
+    if (isHomeLoading) {
+        console.log("Loading Home...");
+    }
 
     return (
         <>
@@ -77,7 +81,7 @@ export function SidebarComponent() {
 
                     {user && (
                         <>
-                            <PaperSelectComponent />
+                            <PaperSelect />
                             <Button
                                 variant="filled"
                                 className="h-14"

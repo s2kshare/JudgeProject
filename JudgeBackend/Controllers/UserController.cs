@@ -52,17 +52,20 @@ public class UserController : Controller
     /// </summary>
     /// <returns>List of papers and labs enrolled in</returns>
     [HttpGet("student-home")]
-    [Authorize(Roles = "Student")]
+    [Authorize(Roles = "Student,Admin")]
     public async Task<IActionResult> GetStudentPapersAndLabs()
     {
+        Console.WriteLine("[!] Initialized");
         // Check if user is authenticated
         if (!User.Identity!.IsAuthenticated)
             return Unauthorized("User is not Logged In. Please Login.");
 
         // Get the username from the ClaimsPrincipal
-        var username = User.Identity.Name;
+        // var username = User.Identity.Name;
+        var username = "s2k";
         if (string.IsNullOrEmpty(username))
             return BadRequest("Username is Null or Empty.");
+        Console.WriteLine(username);
 
         // Check if the user exists
         if (await _userService.UserExists(username) == false)
@@ -84,6 +87,7 @@ public class UserController : Controller
                 {
                     labID = l.ID,
                     labName = l.Name,
+                    labNumber = l.Number,
                     labDescription = l.Description
                 }).ToList()
             }).ToList()
