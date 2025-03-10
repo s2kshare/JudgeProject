@@ -15,6 +15,29 @@ public class AuthController : Controller
         _userService = userService;
     }
 
+    [HttpGet("check-services")]
+    public async Task<IActionResult> DashboardUtils()
+    {
+        using var httpClient = new HttpClient();
+        try
+        {
+            // Pinging Docker Judge API
+            var response = await httpClient.GetAsync("https://localhost:32400");
+            if (response.IsSuccessStatusCode)
+            {
+                return Ok("Ping successful");
+            }
+            else
+            {
+                return StatusCode((int)response.StatusCode, "Ping failed");
+            }
+        }
+        catch (HttpRequestException e)
+        {
+            return StatusCode(500, $"Ping failed: {e.Message}");
+        }
+    }
+
     [HttpPost("login")]
     public async Task<IActionResult> Login([FromBody] LoginRequest request)
     {
