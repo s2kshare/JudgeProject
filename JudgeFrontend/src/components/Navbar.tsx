@@ -5,6 +5,7 @@ import { JUDGE_LOGO, JUDGE_NAME } from "../lib/constants";
 import { Avatar, Typography } from "@material-tailwind/react";
 import { AppRoute, ROUTE_TITLES, capitalizeFirstLetter } from "../lib/utils";
 import { useLocation } from "react-router-dom";
+import UserProfile from "./UserProfile";
 
 export default function Navbar({
     navOpen,
@@ -32,34 +33,7 @@ export default function Navbar({
                 <div>
                     <div className="hidden md:block">
                         <div className="flex items-center gap-4">
-                            <Avatar
-                                src="https://docs.material-tailwind.com/img/face-2.jpg"
-                                alt="avatar"
-                                variant="rounded"
-                                placeholder={undefined}
-                                onPointerEnterCapture={undefined}
-                                onPointerLeaveCapture={undefined}
-                            />
-                            <div>
-                                <Typography
-                                    variant="h6"
-                                    placeholder={undefined}
-                                    onPointerEnterCapture={undefined}
-                                    onPointerLeaveCapture={undefined}
-                                >
-                                    Username
-                                </Typography>
-                                <Typography
-                                    variant="small"
-                                    color="gray"
-                                    className="font-normal"
-                                    placeholder={undefined}
-                                    onPointerEnterCapture={undefined}
-                                    onPointerLeaveCapture={undefined}
-                                >
-                                    Year Level
-                                </Typography>
-                            </div>
+                            <UserProfile />
                             <div className="block md:hidden">
                                 <Button
                                     variant="text"
