@@ -2,11 +2,14 @@ import { Button } from "@material-tailwind/react";
 import { JUDGE_FE_VERSION, JUDGE_LOGO, JUDGE_NAME } from "../lib/constants";
 import { useLocation, useNavigate } from "react-router-dom";
 import { AppRoute } from "../lib/utils";
+import { useState } from "react";
+import SubmissionModal from "./modals/SubmissionModal";
 
 export default function AppSidebar() {
     const navigate = useNavigate();
     const location = useLocation();
     const currentPath = (location.pathname as AppRoute) || "/";
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
     return (
         <div className="fixed shadow-xl left-0 top-0 p-10 min-w-80 w-1/5 h-full hidden md:block bg-[--col-base-100]">
@@ -70,12 +73,17 @@ export default function AppSidebar() {
                         placeholder={undefined}
                         onPointerEnterCapture={undefined}
                         onPointerLeaveCapture={undefined}
+                        onClick={() => setIsSubmitting(true)}
                     >
                         Submit Lab
                     </Button>
                 </div>
             </div>
             <div className="low-sidebar"></div>
+            <SubmissionModal
+                isOpen={isSubmitting}
+                setIsOpen={setIsSubmitting}
+            />
         </div>
     );
 }
