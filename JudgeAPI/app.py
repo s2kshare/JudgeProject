@@ -4,6 +4,10 @@ import time
 
 app = Flask(__name__)
 
+@app.route('/ping', methods=['GET'])
+def ping():
+    return jsonify(success=True)
+
 @app.route('/submit', methods=['POST'])
 def submit_code():
     """

@@ -4,38 +4,74 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Data.SqlClient;
 
 [Route("auth")]
 [ApiController]
 public class AuthController : Controller
 {
     private readonly IUserService _userService;
-    public AuthController(IUserService userService)
+    private readonly IConfiguration _configuration;
+
+    public AuthController(IUserService userService, IConfiguration configuration)
     {
         _userService = userService;
+        _configuration = configuration;
     }
 
+    // TODO: Ping Database + return json message
     [HttpGet("check-services")]
     public async Task<IActionResult> DashboardUtils()
     {
-        using var httpClient = new HttpClient();
+        bool apiActive = false;
+        bool dbActive = false;
+        string apiMessage = string.Empty;
+        string dbMessage = string.Empty;
+
+
+        // Ignore SSL Errors (for local development only):
+        var httpClientHandler = new HttpClientHandler
+        {
+            ServerCertificateCustomValidationCallback = (sender, cert, chain, sslPolicyErrors) => true
+        };
+
+        using var httpClient = new HttpClient(httpClientHandler);
+        #region  Docker Judge API Ping
         try
         {
             // Pinging Docker Judge API
-            var response = await httpClient.GetAsync("https://localhost:32400");
+            var response = await httpClient.GetAsync("http://localhost:5000/ping");
             if (response.IsSuccessStatusCode)
-            {
-                return Ok("Ping successful");
-            }
+                apiActive = true;
             else
-            {
                 return StatusCode((int)response.StatusCode, "Ping failed");
-            }
         }
         catch (HttpRequestException e)
         {
-            return StatusCode(500, $"Ping failed: {e.Message}");
+            apiMessage = e.Message;
         }
+        #endregion
+    
+        #region Docker Judge DB Ping
+        try {
+            string sql_connection_string = _configuration.GetConnectionString("JudgeDbConnection");
+
+            using (var connection = new SqlConnection(sql_connection_string))
+            {
+                await connection.OpenAsync();
+                dbActive = true;
+            }
+        }
+        catch (Exception e)
+        {
+            dbMessage = e.Message;
+        }
+        #endregion
+
+        if (!dbActive || !apiActive)
+            return BadRequest(new { apiActive, dbActive, apiMessage, dbMessage });
+
+        return Ok(new { apiActive, dbActive  });
     }
 
     [HttpPost("login")]
