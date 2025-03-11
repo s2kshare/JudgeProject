@@ -22,7 +22,7 @@ export function UnderlineTabs({
     return (
         <Tabs value={activeTab}>
             <TabsHeader
-                className="rounded-none border-b border-blue-gray-50 bg-transparent p-0"
+                className="rounded-none z-0 border-b border-blue-gray-50 bg-transparent p-0"
                 indicatorProps={{
                     className:
                         "bg-transparent border-b-2 border-gray-900 shadow-none rounded-none",
@@ -36,7 +36,11 @@ export function UnderlineTabs({
                         key={value}
                         value={value}
                         onClick={() => setActiveTab(value)}
-                        className={activeTab === value ? "text-gray-900" : ""}
+                        className={
+                            activeTab === value
+                                ? "text-gray-900 text-nowrap"
+                                : "text-nowrap"
+                        }
                         placeholder={undefined}
                         onPointerEnterCapture={undefined}
                         onPointerLeaveCapture={undefined}

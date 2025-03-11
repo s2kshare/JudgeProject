@@ -1,8 +1,6 @@
 import { Button } from "@material-tailwind/react";
 import { RxHamburgerMenu } from "react-icons/rx";
 import { IoExitOutline } from "react-icons/io5";
-import { JUDGE_LOGO, JUDGE_NAME } from "../lib/constants";
-import { Avatar, Typography } from "@material-tailwind/react";
 import { AppRoute, ROUTE_TITLES, capitalizeFirstLetter } from "../lib/utils";
 import { useLocation } from "react-router-dom";
 import UserProfile from "./UserProfile";
@@ -20,10 +18,10 @@ export default function Navbar({
     return (
         <div className="w-full h-full flex justify-between items-center px-10">
             <div className="nav-left flex gap-2 items-center">
-                <div className="flex gap-2 items-center md:hidden">
+                {/* <div className="flex gap-2 items-center md:hidden">
                     <img className="w-10 h-10" src={JUDGE_LOGO} />
                     <h1>{JUDGE_NAME}</h1>
-                </div>
+                </div> */}
                 <h1 className="text-3xl font-semibold">
                     {capitalizeFirstLetter(ROUTE_TITLES[currentPath])}
                 </h1>
@@ -31,10 +29,10 @@ export default function Navbar({
             <div className="nav-mid"></div>
             <div className="nav-right">
                 <div>
-                    <div className="hidden md:block">
+                    <div className="block">
                         <div className="flex items-center gap-4">
                             <UserProfile />
-                            <div className="block md:hidden">
+                            <div className="block">
                                 <Button
                                     variant="text"
                                     placeholder={undefined}

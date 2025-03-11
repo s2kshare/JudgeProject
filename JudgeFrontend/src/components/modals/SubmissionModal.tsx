@@ -59,7 +59,7 @@ export default function SubmissionModal({
         <Dialog
             open={isOpen}
             onClose={() => setIsOpen(false)}
-            className="fixed inset-0 flex items-center justify-center"
+            className="fixed inset-0 flex items-center justify-center z-20"
         >
             <div className="fixed inset-0 bg-black opacity-50"></div>
             <Dialog.Panel className="bg-white min-w-96 p-6 rounded shadow-lg z-10">

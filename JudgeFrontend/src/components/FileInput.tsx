@@ -44,7 +44,9 @@ const FileInput: React.FC<FileInputProps> = ({ onChange }) => {
 
     return (
         <motion.div
-            className={`file-input ${dragging ? "dragging h-32" : "h-32"}`}
+            className={`file-input hover:cursor-pointer ${
+                dragging ? "dragging h-32" : "h-32"
+            }`}
             onDrop={handleDrop}
             onDragOver={handleDragOver}
             onDragLeave={handleDragLeave}

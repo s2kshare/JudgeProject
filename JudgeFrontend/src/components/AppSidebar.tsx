@@ -2,7 +2,7 @@ import { Button } from "@material-tailwind/react";
 import { JUDGE_FE_VERSION, JUDGE_LOGO, JUDGE_NAME } from "../lib/constants";
 import { useLocation, useNavigate } from "react-router-dom";
 import { AppRoute } from "../lib/utils";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import SubmissionModal from "./modals/SubmissionModal";
 
 import { IoHome } from "react-icons/io5";
@@ -10,15 +10,43 @@ import { MdDashboard } from "react-icons/md";
 import { MdHistory } from "react-icons/md";
 import { MdLeaderboard } from "react-icons/md";
 import { IoCloudUploadSharp } from "react-icons/io5";
+import { motion } from "framer-motion";
 
-export default function AppSidebar() {
+export default function AppSidebar({
+    isOpen,
+    setIsOpen,
+}: {
+    isOpen: boolean;
+    setIsOpen: (val: boolean) => void;
+}) {
     const navigate = useNavigate();
     const location = useLocation();
     const currentPath = (location.pathname as AppRoute) || "/";
     const [isSubmitting, setIsSubmitting] = useState(false);
 
+    useEffect(() => {
+        const handleResize = () => {
+            if (window.innerWidth < 1280) {
+                setIsOpen(false);
+            }
+        };
+
+        window.addEventListener("resize", handleResize);
+        return () => window.removeEventListener("resize", handleResize);
+    }, [setIsOpen]);
+
     return (
-        <div className="fixed shadow-xl left-0 top-0 p-10 min-w-80 w-1/5 h-full hidden md:block bg-[--col-base-100]">
+        <motion.div
+            initial={{ x: "-100%" }}
+            animate={{ x: isOpen ? 0 : "-100%" }}
+            transition={{
+                ease: "easeInOut",
+                stiffness: 100,
+                damping: 15,
+                duration: 0.5,
+            }}
+            className={`fixed shadow-xl left-0 top-0 p-10 min-w-80 w-1/5 h-full bg-[--col-base-300] z-10 xl:block`}
+        >
             <div className="upper-sidebar h-1/6 flex relative items-center justify-center mb-6">
                 <img className="w-20 h-20" src={JUDGE_LOGO}></img>
                 <h1 className="font-semibold text-2xl">{JUDGE_NAME}</h1>
@@ -31,11 +59,11 @@ export default function AppSidebar() {
                     <Button
                         variant="text"
                         className="w-full font-normal text-left flex gap-2 items-center"
+                        onClick={() => navigate("/")}
+                        disabled={currentPath === "/"}
                         placeholder={undefined}
                         onPointerEnterCapture={undefined}
                         onPointerLeaveCapture={undefined}
-                        onClick={() => navigate("/")}
-                        disabled={currentPath === "/"}
                     >
                         <IoHome className="h-5 w-5" />
                         Home
@@ -43,11 +71,11 @@ export default function AppSidebar() {
                     <Button
                         variant="text"
                         className="w-full font-normal text-left flex gap-2 items-center"
+                        onClick={() => navigate("/history")}
+                        disabled={currentPath === "/history"}
                         placeholder={undefined}
                         onPointerEnterCapture={undefined}
                         onPointerLeaveCapture={undefined}
-                        onClick={() => navigate("/history")}
-                        disabled={currentPath === "/history"}
                     >
                         <MdHistory className="h-5 w-5" />
                         History
@@ -55,11 +83,11 @@ export default function AppSidebar() {
                     <Button
                         variant="text"
                         className="w-full font-normal text-left flex gap-2 items-center"
+                        onClick={() => navigate("/scoreboard")}
+                        disabled={currentPath === "/scoreboard"}
                         placeholder={undefined}
                         onPointerEnterCapture={undefined}
                         onPointerLeaveCapture={undefined}
-                        onClick={() => navigate("/scoreboard")}
-                        disabled={currentPath === "/scoreboard"}
                     >
                         <MdLeaderboard className="h-5 w-5" />
                         Scoreboard
@@ -67,11 +95,11 @@ export default function AppSidebar() {
                     <Button
                         variant="text"
                         className="w-full font-normal text-left flex gap-2 items-center"
+                        onClick={() => navigate("/dashboard")}
+                        disabled={currentPath === "/dashboard"}
                         placeholder={undefined}
                         onPointerEnterCapture={undefined}
                         onPointerLeaveCapture={undefined}
-                        onClick={() => navigate("/dashboard")}
-                        disabled={currentPath === "/dashboard"}
                     >
                         <MdDashboard className="h-5 w-5" />
                         Dashboard
@@ -80,10 +108,10 @@ export default function AppSidebar() {
                     <Button
                         variant="filled"
                         className="w-full font-normal text-left flex gap-2 items-center"
+                        onClick={() => setIsSubmitting(true)}
                         placeholder={undefined}
                         onPointerEnterCapture={undefined}
                         onPointerLeaveCapture={undefined}
-                        onClick={() => setIsSubmitting(true)}
                     >
                         <IoCloudUploadSharp className="h-5 w-5" />
                         Submit Lab
@@ -95,6 +123,6 @@ export default function AppSidebar() {
                 isOpen={isSubmitting}
                 setIsOpen={setIsSubmitting}
             />
-        </div>
+        </motion.div>
     );
 }

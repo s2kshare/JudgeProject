@@ -30,7 +30,7 @@ export default function UserProfile() {
             <MenuHandler>
                 <Button
                     variant="text"
-                    className="flex gap-2"
+                    className="flex gap-2 p-2"
                     placeholder={undefined}
                     onPointerEnterCapture={undefined}
                     onPointerLeaveCapture={undefined}

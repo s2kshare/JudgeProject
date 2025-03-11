@@ -1,6 +1,6 @@
-// Hook Imports
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { motion } from "framer-motion";
 
 // Component Imports
 import AppSidebar from "./components/AppSidebar";
@@ -13,23 +13,41 @@ import ScoreboardPage from "./pages/ScoreboardPage";
 import DashboardPage from "./pages/DashboardPage";
 
 function App() {
-    const [navOpen, toggleNavOpen] = useState(false);
+    const [navOpen, setNavOpen] = useState(false);
 
     const toggleNav = () => {
-        /**
-         * Toggle the state of the navigation menu
-         */
-        toggleNavOpen(!navOpen);
+        setNavOpen((prev) => !prev);
     };
+
+    // Close sidebar when window resizes below `xl` (1280px)
+    useEffect(() => {
+        const handleResize = () => {
+            if (window.innerWidth < 1280) {
+                setNavOpen(false);
+            }
+        };
+
+        window.addEventListener("resize", handleResize);
+        return () => window.removeEventListener("resize", handleResize);
+    }, []);
 
     return (
         <BrowserRouter basename="/">
             <div className="min-h-screen flex">
-                {/* Sidebar (hidden on smaller screens) */}
-                <AppSidebar />
+                {/* Sidebar */}
+                <AppSidebar isOpen={navOpen} setIsOpen={toggleNav} />
 
-                {/* Main Content (adjusts margin based on screen size) */}
-                <div className="flex-1 bg-[--col-base-200] ml-0 md:ml-[20%]">
+                {/* Main Content (animated margin-left) */}
+                <motion.div
+                    className="flex-1 bg-[--col-base-100]"
+                    animate={{ marginLeft: navOpen ? "20%" : "0%" }}
+                    transition={{
+                        ease: "easeInOut",
+                        stiffness: 100,
+                        damping: 15,
+                        duration: 0.5,
+                    }}
+                >
                     <div className="h-24">
                         <Navbar navOpen={navOpen} toggleNav={toggleNav} />
                     </div>
@@ -47,7 +65,7 @@ function App() {
                             />
                         </Routes>
                     </div>
-                </div>
+                </motion.div>
             </div>
         </BrowserRouter>
     );
