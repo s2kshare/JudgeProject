@@ -5,6 +5,12 @@ import { AppRoute } from "../lib/utils";
 import { useState } from "react";
 import SubmissionModal from "./modals/SubmissionModal";
 
+import { IoHome } from "react-icons/io5";
+import { MdDashboard } from "react-icons/md";
+import { MdHistory } from "react-icons/md";
+import { MdLeaderboard } from "react-icons/md";
+import { IoCloudUploadSharp } from "react-icons/io5";
+
 export default function AppSidebar() {
     const navigate = useNavigate();
     const location = useLocation();
@@ -24,57 +30,62 @@ export default function AppSidebar() {
                 <div className="flex flex-col gap-1">
                     <Button
                         variant="text"
-                        className="w-full font-normal text-left"
+                        className="w-full font-normal text-left flex gap-2 items-center"
                         placeholder={undefined}
                         onPointerEnterCapture={undefined}
                         onPointerLeaveCapture={undefined}
                         onClick={() => navigate("/")}
                         disabled={currentPath === "/"}
                     >
+                        <IoHome className="h-5 w-5" />
                         Home
                     </Button>
                     <Button
                         variant="text"
-                        className="w-full font-normal text-left"
+                        className="w-full font-normal text-left flex gap-2 items-center"
                         placeholder={undefined}
                         onPointerEnterCapture={undefined}
                         onPointerLeaveCapture={undefined}
                         onClick={() => navigate("/history")}
                         disabled={currentPath === "/history"}
                     >
+                        <MdHistory className="h-5 w-5" />
                         History
                     </Button>
                     <Button
                         variant="text"
-                        className="w-full font-normal text-left"
+                        className="w-full font-normal text-left flex gap-2 items-center"
                         placeholder={undefined}
                         onPointerEnterCapture={undefined}
                         onPointerLeaveCapture={undefined}
                         onClick={() => navigate("/scoreboard")}
                         disabled={currentPath === "/scoreboard"}
                     >
+                        <MdLeaderboard className="h-5 w-5" />
                         Scoreboard
                     </Button>
                     <Button
                         variant="text"
-                        className="w-full font-normal text-left"
+                        className="w-full font-normal text-left flex gap-2 items-center"
                         placeholder={undefined}
                         onPointerEnterCapture={undefined}
                         onPointerLeaveCapture={undefined}
                         onClick={() => navigate("/dashboard")}
                         disabled={currentPath === "/dashboard"}
                     >
+                        <MdDashboard className="h-5 w-5" />
                         Dashboard
                     </Button>
                     <hr className="border-[--col-base-400] my-2 mx-10" />
                     <Button
                         variant="filled"
-                        className="w-full font-normal text-left"
+                        className="w-full font-normal text-left flex gap-2 items-center"
                         placeholder={undefined}
                         onPointerEnterCapture={undefined}
                         onPointerLeaveCapture={undefined}
                         onClick={() => setIsSubmitting(true)}
                     >
+                        <IoCloudUploadSharp className="h-5 w-5" />
                         Submit Lab
                     </Button>
                 </div>

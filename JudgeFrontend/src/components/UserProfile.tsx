@@ -10,6 +10,18 @@ import {
 } from "@material-tailwind/react";
 
 export default function UserProfile() {
+    const handleLogout = (e: React.MouseEvent) => {
+        e.preventDefault();
+
+        // TODO API: Implement logout
+    };
+
+    const handleProfile = (e: React.MouseEvent) => {
+        e.preventDefault();
+
+        // TODO: Implement profile modal
+    };
+
     return (
         <Menu>
             <MenuHandler>
@@ -60,6 +72,7 @@ export default function UserProfile() {
                     placeholder={undefined}
                     onPointerEnterCapture={undefined}
                     onPointerLeaveCapture={undefined}
+                    onClick={handleProfile}
                 >
                     Edit Profile
                 </MenuItem>
@@ -69,6 +82,7 @@ export default function UserProfile() {
                     placeholder={undefined}
                     onPointerEnterCapture={undefined}
                     onPointerLeaveCapture={undefined}
+                    onClick={handleLogout}
                 >
                     Logout
                 </MenuItem>
