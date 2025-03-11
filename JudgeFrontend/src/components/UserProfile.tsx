@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
     Avatar,
     Button,
@@ -8,8 +8,11 @@ import {
     MenuList,
     Typography,
 } from "@material-tailwind/react";
+import EditProfileModal from "./modals/EditProfileModal";
 
 export default function UserProfile() {
+    const [isOpeningProfile, setIsOpeningProfile] = useState(false);
+
     const handleLogout = (e: React.MouseEvent) => {
         e.preventDefault();
 
@@ -18,7 +21,7 @@ export default function UserProfile() {
 
     const handleProfile = (e: React.MouseEvent) => {
         e.preventDefault();
-
+        setIsOpeningProfile(true);
         // TODO: Implement profile modal
     };
 
@@ -87,6 +90,10 @@ export default function UserProfile() {
                     Logout
                 </MenuItem>
             </MenuList>
+            <EditProfileModal
+                isOpen={isOpeningProfile}
+                setIsOpen={setIsOpeningProfile}
+            />
         </Menu>
     );
 }

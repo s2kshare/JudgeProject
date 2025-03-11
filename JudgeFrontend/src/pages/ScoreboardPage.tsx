@@ -9,7 +9,19 @@ export default function ScoreboardPage() {
             <h1 className="text-3xl font-semibold mb-3">
                 {PAPER_NAME} Scoreboard
             </h1>
-            <div className="">
+            <div className="my-8">
+                <ScoreboardCard />
+            </div>
+            <div className="my-8">
+                <ScoreboardCard />
+            </div>
+            <div className="my-8">
+                <ScoreboardCard />
+            </div>
+            <div className="my-8">
+                <ScoreboardCard />
+            </div>
+            <div className="my-8">
                 <ScoreboardCard />
             </div>
         </>
