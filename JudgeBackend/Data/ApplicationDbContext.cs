@@ -42,6 +42,8 @@ namespace JudgeBackend.Data
                 .WithMany()
                 .HasForeignKey(p => p.LabID)
                 .OnDelete(DeleteBehavior.Cascade);  // Keep cascade for LabID
+
+            
         }
     }
 }

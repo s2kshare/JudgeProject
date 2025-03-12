@@ -12,5 +12,6 @@ namespace JudgeBackend.Interfaces
         Task<Paper?> CreatePaper(PaperCreate paper);                // Admin only
         Task<Paper?> UpdatePaper(int paperId, Paper updatedPaper);  // Admin only
         Task<bool> DeletePaper(int paperId);                        // Admin only
+        Task<List<ScoreboardDTO>> GetScoreboard(int paperID);
     }
 }

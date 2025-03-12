@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 [Route("papers")]
 [ApiController]
-[Authorize]
+// [Authorize]
 public class PaperController : ControllerBase
 {
     private readonly IPaperService _paperService;
@@ -35,5 +35,14 @@ public class PaperController : ControllerBase
     {
         var newPaper = await _paperService.CreatePaper(paper);
         return CreatedAtAction(nameof(GetPapers), new { id = newPaper?.ID }, paper);
+    }
+
+    [HttpGet("{id}/scoreboard")]
+    public async Task<IActionResult> GetPaperScoreboard(int id)
+    {
+        var scoreboard = await _paperService.GetScoreboard(id);
+        if (scoreboard == null)
+            return NotFound($"Couldn't find the paper by ID: {id}");
+        return Ok(scoreboard);
     }
 }

@@ -5,6 +5,7 @@ using JudgeBackend.Data;
 using JudgeBackend.DTO;
 using JudgeBackend.Interfaces;
 using JudgeBackend.Models;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
 
 namespace JudgeBackend.Services
@@ -76,6 +77,32 @@ namespace JudgeBackend.Services
             _context.Papers.Remove(paper);
             await _context.SaveChangesAsync();
             return true;
+        }
+
+        public async Task<List<ScoreboardDTO>> GetScoreboard(int paperID)
+        {
+            var paper = await _context.Papers.FindAsync(paperID);
+
+            // Return nothing if paper not found
+            if (paper == null)
+                return null!;
+
+            var studentPapers = await _context.StudentPapers
+                .Where(sp => sp.PaperID == paperID)
+                .Include(sp => sp.Student)
+                .Include(sp => sp.Paper)
+                .ToListAsync();
+            
+            var result = studentPapers.Select(sp => new ScoreboardDTO
+            {
+                StudentID = sp.Student.ID,
+                StudentName = $"{sp.Student.FirstName} {sp.Student.LastName}",
+                Score = sp.Score,
+                PassedLabs = sp.PassedLabs.Count()
+            }).ToList();
+
+            Console.WriteLine(result);
+            return result;
         }
     }
 }

@@ -13,7 +13,7 @@ import ScoreboardPage from "./pages/ScoreboardPage";
 import DashboardPage from "./pages/DashboardPage";
 
 function App() {
-    const [navOpen, setNavOpen] = useState(false);
+    const [navOpen, setNavOpen] = useState(true);
 
     const toggleNav = () => {
         setNavOpen((prev) => !prev);
