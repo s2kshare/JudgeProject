@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace JudgeBackend.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreate : Migration
+    public partial class initial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -37,6 +37,7 @@ namespace JudgeBackend.Migrations
                     ID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Code = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     TeacherID = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
@@ -75,25 +76,26 @@ namespace JudgeBackend.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "StudentPaper",
+                name: "StudentPapers",
                 columns: table => new
                 {
                     ID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     StudentID = table.Column<int>(type: "int", nullable: false),
-                    PaperID = table.Column<int>(type: "int", nullable: false)
+                    PaperID = table.Column<int>(type: "int", nullable: false),
+                    Score = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_StudentPaper", x => x.ID);
+                    table.PrimaryKey("PK_StudentPapers", x => x.ID);
                     table.ForeignKey(
-                        name: "FK_StudentPaper_Papers_PaperID",
+                        name: "FK_StudentPapers_Papers_PaperID",
                         column: x => x.PaperID,
                         principalTable: "Papers",
                         principalColumn: "ID",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_StudentPaper_Users_StudentID",
+                        name: "FK_StudentPapers_Users_StudentID",
                         column: x => x.StudentID,
                         principalTable: "Users",
                         principalColumn: "ID",
@@ -130,6 +132,37 @@ namespace JudgeBackend.Migrations
                         onDelete: ReferentialAction.Restrict);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "PassedLab",
+                columns: table => new
+                {
+                    ID = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    StudentPaperID = table.Column<int>(type: "int", nullable: false),
+                    LabID = table.Column<int>(type: "int", nullable: false),
+                    StudentPaperID1 = table.Column<int>(type: "int", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_PassedLab", x => x.ID);
+                    table.ForeignKey(
+                        name: "FK_PassedLab_Labs_LabID",
+                        column: x => x.LabID,
+                        principalTable: "Labs",
+                        principalColumn: "ID",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_PassedLab_StudentPapers_StudentPaperID",
+                        column: x => x.StudentPaperID,
+                        principalTable: "StudentPapers",
+                        principalColumn: "ID");
+                    table.ForeignKey(
+                        name: "FK_PassedLab_StudentPapers_StudentPaperID1",
+                        column: x => x.StudentPaperID1,
+                        principalTable: "StudentPapers",
+                        principalColumn: "ID");
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_Labs_PaperID",
                 table: "Labs",
@@ -141,13 +174,28 @@ namespace JudgeBackend.Migrations
                 column: "TeacherID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_StudentPaper_PaperID",
-                table: "StudentPaper",
+                name: "IX_PassedLab_LabID",
+                table: "PassedLab",
+                column: "LabID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_PassedLab_StudentPaperID",
+                table: "PassedLab",
+                column: "StudentPaperID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_PassedLab_StudentPaperID1",
+                table: "PassedLab",
+                column: "StudentPaperID1");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_StudentPapers_PaperID",
+                table: "StudentPapers",
                 column: "PaperID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_StudentPaper_StudentID",
-                table: "StudentPaper",
+                name: "IX_StudentPapers_StudentID",
+                table: "StudentPapers",
                 column: "StudentID");
 
             migrationBuilder.CreateIndex(
@@ -165,10 +213,13 @@ namespace JudgeBackend.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "StudentPaper");
+                name: "PassedLab");
 
             migrationBuilder.DropTable(
                 name: "Submissions");
+
+            migrationBuilder.DropTable(
+                name: "StudentPapers");
 
             migrationBuilder.DropTable(
                 name: "Labs");

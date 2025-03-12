@@ -23,7 +23,7 @@ function App() {
     useEffect(() => {
         const handleResize = () => {
             if (window.innerWidth < 1280) {
-                setNavOpen(false);
+                setNavOpen(true);
             }
         };
 
@@ -35,7 +35,7 @@ function App() {
         <BrowserRouter basename="/">
             <div className="min-h-screen flex">
                 {/* Sidebar */}
-                <AppSidebar isOpen={navOpen} setIsOpen={toggleNav} />
+                <AppSidebar isOpen={navOpen} />
 
                 {/* Main Content (animated margin-left) */}
                 <motion.div

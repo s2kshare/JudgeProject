@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace JudgeBackend.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250302102044_StudentPapersDBSet")]
-    partial class StudentPapersDBSet
+    [Migration("20250312214128_initial")]
+    partial class initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -70,6 +70,9 @@ namespace JudgeBackend.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
 
+                    b.Property<string>("Code")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -84,6 +87,34 @@ namespace JudgeBackend.Migrations
                     b.ToTable("Papers");
                 });
 
+            modelBuilder.Entity("JudgeBackend.Models.PassedLab", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
+
+                    b.Property<int>("LabID")
+                        .HasColumnType("int");
+
+                    b.Property<int>("StudentPaperID")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("StudentPaperID1")
+                        .HasColumnType("int");
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("LabID");
+
+                    b.HasIndex("StudentPaperID");
+
+                    b.HasIndex("StudentPaperID1");
+
+                    b.ToTable("PassedLab");
+                });
+
             modelBuilder.Entity("JudgeBackend.Models.StudentPaper", b =>
                 {
                     b.Property<int>("ID")
@@ -93,6 +124,9 @@ namespace JudgeBackend.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
 
                     b.Property<int>("PaperID")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Score")
                         .HasColumnType("int");
 
                     b.Property<int>("StudentID")
@@ -233,6 +267,29 @@ namespace JudgeBackend.Migrations
                     b.Navigation("Teacher");
                 });
 
+            modelBuilder.Entity("JudgeBackend.Models.PassedLab", b =>
+                {
+                    b.HasOne("JudgeBackend.Models.Lab", "Lab")
+                        .WithMany()
+                        .HasForeignKey("LabID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("JudgeBackend.Models.StudentPaper", "StudentPaper")
+                        .WithMany()
+                        .HasForeignKey("StudentPaperID")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("JudgeBackend.Models.StudentPaper", null)
+                        .WithMany("PassedLabs")
+                        .HasForeignKey("StudentPaperID1");
+
+                    b.Navigation("Lab");
+
+                    b.Navigation("StudentPaper");
+                });
+
             modelBuilder.Entity("JudgeBackend.Models.StudentPaper", b =>
                 {
                     b.HasOne("JudgeBackend.Models.Paper", "Paper")
@@ -281,6 +338,11 @@ namespace JudgeBackend.Migrations
                     b.Navigation("EnrolledStudents");
 
                     b.Navigation("Labs");
+                });
+
+            modelBuilder.Entity("JudgeBackend.Models.StudentPaper", b =>
+                {
+                    b.Navigation("PassedLabs");
                 });
 
             modelBuilder.Entity("JudgeBackend.Models.Student", b =>

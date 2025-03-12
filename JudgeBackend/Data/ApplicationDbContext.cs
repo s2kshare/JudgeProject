@@ -30,6 +30,18 @@ namespace JudgeBackend.Data
                 .WithMany(s => s.EnrolledPapers)
                 .HasForeignKey(sp => sp.StudentID)
                 .OnDelete(DeleteBehavior.Restrict);
+
+            // Set one of the foreign keys to "NoAction" to avoid cascade conflict
+            modelBuilder.Entity<PassedLab>()
+                .HasOne(p => p.StudentPaper)
+                .WithMany()
+                .HasForeignKey(p => p.StudentPaperID)
+                .OnDelete(DeleteBehavior.NoAction);  // or DeleteBehavior.SetNull
+            modelBuilder.Entity<PassedLab>()
+                .HasOne(p => p.Lab)
+                .WithMany()
+                .HasForeignKey(p => p.LabID)
+                .OnDelete(DeleteBehavior.Cascade);  // Keep cascade for LabID
         }
     }
 }

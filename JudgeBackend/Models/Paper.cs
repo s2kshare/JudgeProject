@@ -8,6 +8,7 @@ namespace JudgeBackend.Models
         [Key]
         public int ID { get; set; }
         public string Name { get; set; } = default!;
+        public string? Code { get; set; }
     
         // * The Teacher managing this paper
         [ForeignKey("TeacherID")]

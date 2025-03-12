@@ -12,5 +12,9 @@ namespace JudgeBackend.Models
 
         public int PaperID { get; set; }
         public Paper Paper { get; set; } = default!;
+
+        public int Score { get; set; } = 0;
+
+        public List<PassedLab> PassedLabs { get; set; } = new List<PassedLab>();
     }
 }

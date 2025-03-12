@@ -12,28 +12,11 @@ import { MdLeaderboard } from "react-icons/md";
 import { IoCloudUploadSharp } from "react-icons/io5";
 import { motion } from "framer-motion";
 
-export default function AppSidebar({
-    isOpen,
-    setIsOpen,
-}: {
-    isOpen: boolean;
-    setIsOpen: (val: boolean) => void;
-}) {
+export default function AppSidebar({ isOpen }: { isOpen: boolean }) {
     const navigate = useNavigate();
     const location = useLocation();
     const currentPath = (location.pathname as AppRoute) || "/";
     const [isSubmitting, setIsSubmitting] = useState(false);
-
-    useEffect(() => {
-        const handleResize = () => {
-            if (window.innerWidth < 1280) {
-                setIsOpen(false);
-            }
-        };
-
-        window.addEventListener("resize", handleResize);
-        return () => window.removeEventListener("resize", handleResize);
-    }, [setIsOpen]);
 
     return (
         <motion.div
