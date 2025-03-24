@@ -76,6 +76,29 @@ app.MapControllers();
 
 app.Run();
 
+#region Seed AdminUser(dbContext);
+static void SeedAdminUser(ApplicationDbContext dbContext)
+{
+    if (!dbContext.Users.Any(u => u.Username == "admin"))
+    {
+        var admin = new Admin
+        {
+            Username = "admin",
+            PasswordHash = BCrypt.Net.BCrypt.HashPassword("admin"),
+            Role = "Admin",
+            Email = "admin@localhost.com",
+            FirstName = "Admin",
+            LastName = "User"
+        };
+
+        dbContext.Users.Add(admin);
+        dbContext.SaveChanges();
+        Console.WriteLine("[✅] Admin User Created!");
+    }
+}
+#endregion
+
+#region Seed Dummy Data
 static void SeedDummyData(ApplicationDbContext dbContext)
 {
     if (!dbContext.Users.Any(u => u.Username == "teacher1"))
@@ -158,24 +181,4 @@ static void SeedDummyData(ApplicationDbContext dbContext)
         Console.WriteLine("[✅] Student Enrolled in Paper!");
     }
 }
-
-
-static void SeedAdminUser(ApplicationDbContext dbContext)
-{
-    if (!dbContext.Users.Any(u => u.Username == "admin"))
-    {
-        var admin = new Admin
-        {
-            Username = "admin",
-            PasswordHash = BCrypt.Net.BCrypt.HashPassword("admin"),
-            Role = "Admin",
-            Email = "admin@localhost.com",
-            FirstName = "Admin",
-            LastName = "User"
-        };
-
-        dbContext.Users.Add(admin);
-        dbContext.SaveChanges();
-        Console.WriteLine("[✅] Admin User Created!");
-    }
-}
+#endregion

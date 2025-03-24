@@ -1,20 +1,31 @@
 import React, { useState } from "react";
 import { JUDGE_NAME } from "../lib/constants";
 import { motion } from "framer-motion";
+import { login } from "../store/actions/UserActions";
+import { useAppDispatch } from "../hooks/hooks";
+import { AxiosError } from "axios";
+import { useNavigate } from "react-router-dom";
 
 export default function LoginPage() {
+    const dispatch = useAppDispatch();
+    const navigate = useNavigate();
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
-    const [error, setError] = useState("");
+    const [error, setError] = useState<string>();
 
-    const handleLogin = (e: React.FormEvent) => {
+    const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault();
-        // Add your login logic here
         if (username && password) {
-            // Proceed with authentication (e.g., make API call)
-            console.log("Logging in with:", { username, password });
+            // Dispatch the login action
+            try {
+                await dispatch(login(username, password));
+                navigate("/");
+            } catch (error) {
+                const axiosError = error as AxiosError;
+                setError(axiosError.message);
+            }
         } else {
-            setError("Please enter both username and password");
+            setError("Both username and password are required.");
         }
     };
 
@@ -77,6 +88,7 @@ export default function LoginPage() {
                             scale: 0.95,
                             transition: { duration: 0.1, type: "spring" },
                         }}
+                        onClick={handleLogin}
                         className="w-full py-2 bg-[--col-dark-300] text-white font-semibold rounded-lg hover:bg-[--col-dark-100] transition duration-300"
                     >
                         Log In

@@ -15,6 +15,7 @@ export const login =
             // After Actions
         } catch (error) {
             console.error("Login failed:", error);
+            throw error;
         }
     };
 

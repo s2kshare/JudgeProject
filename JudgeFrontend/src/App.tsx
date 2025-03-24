@@ -14,13 +14,14 @@ import DashboardPage from "./pages/DashboardPage";
 import LoginPage from "./pages/LoginPage";
 
 // Redux User State
-import { useSelector, UseSelector } from "react-redux";
+import { RootState } from "./store/store";
+import { useAppSelector } from "./hooks/hooks";
 
 function App() {
     const [navOpen, setNavOpen] = useState(true);
     const [isSmallScreen, setIsSmallScreen] = useState(window.innerWidth < 768);
-    const user = useSelector((state: any) => state.user);
-    console.log(user);
+    const { currentUser } = useAppSelector((state: RootState) => state.user);
+    console.log(currentUser);
 
     const toggleNav = () => {
         setNavOpen((prev) => !prev);
@@ -39,7 +40,7 @@ function App() {
     }, []);
 
     // Check if user is signed in, else return to login
-    if (!user.currentUser) {
+    if (!currentUser) {
         return (
             <BrowserRouter basename="/">
                 <div className="min-h-screen w-full flex">
