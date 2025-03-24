@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 
@@ -13,9 +13,14 @@ import ScoreboardPage from "./pages/ScoreboardPage";
 import DashboardPage from "./pages/DashboardPage";
 import LoginPage from "./pages/LoginPage";
 
+// Redux User State
+import { useSelector, UseSelector } from "react-redux";
+
 function App() {
     const [navOpen, setNavOpen] = useState(true);
     const [isSmallScreen, setIsSmallScreen] = useState(window.innerWidth < 768);
+    const user = useSelector((state: any) => state.user);
+    console.log(user);
 
     const toggleNav = () => {
         setNavOpen((prev) => !prev);
@@ -32,6 +37,20 @@ function App() {
         window.addEventListener("resize", handleResize);
         return () => window.removeEventListener("resize", handleResize);
     }, []);
+
+    // Check if user is signed in, else return to login
+    if (!user.currentUser) {
+        return (
+            <BrowserRouter basename="/">
+                <div className="min-h-screen w-full flex">
+                    <Routes>
+                        <Route path="/" element={<Navigate to="/login" />} />
+                        <Route path="/login" element={<LoginPage />} />
+                    </Routes>
+                </div>
+            </BrowserRouter>
+        );
+    }
 
     return (
         <BrowserRouter basename="/">
