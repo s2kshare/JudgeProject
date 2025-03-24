@@ -81,9 +81,9 @@ namespace JudgeBackend.Migrations
                 {
                     ID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
+                    Score = table.Column<int>(type: "int", nullable: false),
                     StudentID = table.Column<int>(type: "int", nullable: false),
-                    PaperID = table.Column<int>(type: "int", nullable: false),
-                    Score = table.Column<int>(type: "int", nullable: false)
+                    PaperID = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {

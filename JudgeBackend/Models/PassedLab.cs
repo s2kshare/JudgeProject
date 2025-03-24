@@ -8,6 +8,7 @@ namespace JudgeBackend.Models
         [Key]
         public int ID { get; set; }
 
+        #region Navigation Properties
         // Foreign Key - StudentPaper (ensuring score is tied to a paper)
         [ForeignKey("StudentPaperID")]
         public int StudentPaperID { get; set; }
@@ -17,5 +18,6 @@ namespace JudgeBackend.Models
         [ForeignKey("LabID")]
         public int LabID { get; set; }
         public Lab Lab { get; set; } = default!;
+        #endregion
     }
 }

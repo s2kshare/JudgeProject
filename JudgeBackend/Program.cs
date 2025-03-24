@@ -17,6 +17,8 @@ builder.Services.AddControllers();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IPaperService, PaperService>();
 builder.Services.AddScoped<ILabService, LabService>();
+builder.Services.AddScoped<IUploadService, UploadService>();
+builder.Services.AddScoped<ISubmissionService, SubmissionService>();
 builder.Services.AddHttpContextAccessor();
 
 // Allow CORS via Policy
@@ -55,8 +57,8 @@ using (var scope = app.Services.CreateScope())
     var services = scope.ServiceProvider;
     var dbContext = services.GetRequiredService<ApplicationDbContext>();
     dbContext.Database.Migrate();
-    // SeedAdminUser(dbContext);
-    // SeedDummyData(dbContext);
+    SeedAdminUser(dbContext);
+    SeedDummyData(dbContext);
 }
 
 // Configure the HTTP request pipeline.

@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace JudgeBackend.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250312214128_initial")]
+    [Migration("20250323235456_initial")]
     partial class initial
     {
         /// <inheritdoc />

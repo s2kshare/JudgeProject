@@ -15,17 +15,16 @@ namespace JudgeBackend.Models
         public string Output { get; set; } = default!;
         public DateTime SubmissionDate { get; set; } = DateTime.Now;
 
-
+        #region Navigation Properties
         // * Each submission is made by a student
         [ForeignKey("StudentID")]
         public int StudentID { get; set; }
         public Student Student { get; set; } = default!;
-    
 
         // * Each submission is for a specific lab
         [ForeignKey("LabID")]
         public int LabID { get; set; }
         public Lab Lab { get; set; } = default!;
-
+        #endregion
     }
 }

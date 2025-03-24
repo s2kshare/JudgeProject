@@ -12,6 +12,7 @@ namespace JudgeBackend.Models
         public string Input { get; set; } = default!;
         public string ExpectedOutput { get; set; } = default!;
 
+        #region Navigation Properties
         // Each lab is associated with one paper.
         [ForeignKey("PaperID")]
         public int PaperID { get; set; }
@@ -20,6 +21,6 @@ namespace JudgeBackend.Models
 
         // One-to-many: a lab can have many submissions.
         public ICollection<Submission> Submissions { get; set; } = new List<Submission>();
-
+        #endregion
     }
 }

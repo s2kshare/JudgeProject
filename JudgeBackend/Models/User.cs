@@ -32,7 +32,7 @@ namespace JudgeBackend.Models
 
     public class Admin : User
     {
-
+        // * Currently there is nothing
     }
 
 }

@@ -50,17 +50,15 @@ public class SubmissionController : Controller
 
     // ✅ Submit a lab (Students only)
     [HttpPost]
-    [Authorize(Roles = "Student")]
+    // [Authorize(Roles = "Student")]
     public async Task<ActionResult<SubmissionDTO>> SubmitLab([FromForm] SubmissionCreate submissionDto)
     {
         SubmissionValidate validationUpload = await _uploadService.ValidateSubmissionFileAsync(submissionDto.SourceFile);
         if (!validationUpload.IsValid)
             return BadRequest(validationUpload.Message);
 
-        var submission = await _submissionService.SubmitLabAsync(submissionDto);
-        // TODO: Fix response
-
-        return CreatedAtAction(nameof(GetSubmissionById), submission);
+        var judge_response = await _submissionService.SubmitLabAsync(submissionDto);
+        return Ok(judge_response);
     }
 
     // ✅ Delete a submission (Admin only)

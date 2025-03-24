@@ -24,15 +24,21 @@ def submit_code():
     data = request.get_json()
 
     # Validate Request
-    if "Language" not in data or "SourceCode" not in data or "Input" not in data or "ExpectedOutput" not in data:
-        return jsonify({"Result": "Error", "std_err": "Missing required fields"}), 400
+    if "language" not in data:
+        return jsonify({"Result": "Error", "std_err": "Missing required field: Language"}), 400
+    if "sourceCode" not in data:
+        return jsonify({"Result": "Error", "std_err": "Missing required field: SourceCode"}), 400
+    if "input" not in data:
+        return jsonify({"Result": "Error", "std_err": "Missing required field: Input"}), 400
+    if "expectedOutput" not in data:
+        return jsonify({"Result": "Error", "std_err": "Missing required field: ExpectedOutput"}), 400
 
     # Call Executor and capture result
     result = executor.execute_code(
-        data["Language"],
-        data["SourceCode"],
-        data["Input"],
-        data["ExpectedOutput"]
+        data["language"],
+        data["sourceCode"],
+        data["input"],
+        data["expectedOutput"]
     )
 
     elapsed_time = time.time() - start_time  # End timer

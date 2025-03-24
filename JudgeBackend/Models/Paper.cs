@@ -10,13 +10,14 @@ namespace JudgeBackend.Models
         public string Name { get; set; } = default!;
         public string? Code { get; set; }
     
+        #region Navigation Properties
         // * The Teacher managing this paper
         [ForeignKey("TeacherID")]
         public int TeacherID { get; set; }
         public Teacher Teacher { get; set; } = default!;
 
         public List<Lab> Labs { get; set; } = new List<Lab>();
-
         public List<StudentPaper> EnrolledStudents { get; set; } = [];
+        #endregion
     }
 }

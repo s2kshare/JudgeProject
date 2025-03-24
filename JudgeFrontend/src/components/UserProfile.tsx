@@ -22,7 +22,6 @@ export default function UserProfile() {
     const handleProfile = (e: React.MouseEvent) => {
         e.preventDefault();
         setIsOpeningProfile(true);
-        // TODO: Implement profile modal
     };
 
     return (
@@ -43,7 +42,7 @@ export default function UserProfile() {
                         onPointerEnterCapture={undefined}
                         onPointerLeaveCapture={undefined}
                     />
-                    <div>
+                    {/* <div className="md:flex hidden">
                         <Typography
                             className="text-start"
                             variant="h6"
@@ -63,7 +62,7 @@ export default function UserProfile() {
                         >
                             Year Level
                         </Typography>
-                    </div>
+                    </div> */}
                 </Button>
             </MenuHandler>
             <MenuList
@@ -79,7 +78,7 @@ export default function UserProfile() {
                 >
                     Edit Profile
                 </MenuItem>
-                <hr className="my-3 border-[--col-base-400]" />
+                <hr className="my-3 border-[--col-base-200]" />
                 <MenuItem
                     className="text-red-300"
                     placeholder={undefined}

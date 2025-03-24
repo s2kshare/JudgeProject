@@ -6,6 +6,7 @@ namespace JudgeBackend.Data
     public class ApplicationDbContext : DbContext
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) {}
+
         public DbSet<User> Users { get; set; }
         public DbSet<Student> Students { get; set; }
         public DbSet<Teacher> Teachers { get; set; }
@@ -15,16 +16,17 @@ namespace JudgeBackend.Data
         public DbSet<Submission> Submissions { get; set; }
         public DbSet<StudentPaper> StudentPapers { get; set; }
     
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            // Prevents cascading delete
+            // Prevents cascading delete for Submission
             modelBuilder.Entity<Submission>()
                 .HasOne(s => s.Student)
                 .WithMany(s => s.Submissions)
                 .HasForeignKey(s => s.StudentID)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            // Prevents cascading delete
+            // Prevents cascading delete for StudentPaper
             modelBuilder.Entity<StudentPaper>()
                 .HasOne(sp => sp.Student)
                 .WithMany(s => s.EnrolledPapers)
@@ -42,8 +44,6 @@ namespace JudgeBackend.Data
                 .WithMany()
                 .HasForeignKey(p => p.LabID)
                 .OnDelete(DeleteBehavior.Cascade);  // Keep cascade for LabID
-
-            
         }
     }
 }

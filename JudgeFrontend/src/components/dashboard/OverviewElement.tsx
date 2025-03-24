@@ -40,9 +40,6 @@ export default function OverviewElement() {
                         </div>
                     </SquareCard>
                 </div>
-                <div className="flex-1">
-                    <SquareCard>What</SquareCard>
-                </div>
             </div>
         </div>
     );

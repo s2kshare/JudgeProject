@@ -1,6 +1,8 @@
 
 using System.ComponentModel;
+using System.Text.Json;
 using JudgeBackend.Data;
+using JudgeBackend.Models;
 
 namespace JudgeBackend.Services
 {
@@ -32,7 +34,7 @@ namespace JudgeBackend.Services
             throw new NotImplementedException();
         }
 
-        public async Task<SubmissionDTO> SubmitLabAsync(SubmissionCreate submissionDto)
+        public async Task<JudgeResponse> SubmitLabAsync(SubmissionCreate submissionDto)
         {
             var lab = await _context.Labs.FindAsync(submissionDto.LabID);
             if (lab == null) throw new Exception("Lab not found");
@@ -45,12 +47,76 @@ namespace JudgeBackend.Services
                 SourceCode = source_code,
                 Language = submissionDto.Language!,
                 Input = lab.Input,
-                ExpetedOutput = lab.ExpectedOutput
+                ExpectedOutput = lab.ExpectedOutput
             };
 
-            // TODO: Implement submission VIA API
+            using (var httpClient = new HttpClient())
+            {
+                // Send Request to JudgeAPI
+                var response = await httpClient.PostAsJsonAsync("http://localhost:5000/submit", request);
+                if (!response.IsSuccessStatusCode)
+                {
+                    var responseContent = await response.Content.ReadAsStringAsync();
+                    throw new Exception($"API call failed. Response: {responseContent}");
+                }
 
-            throw new NotImplementedException();
+                // Capture the result
+                var jsonResult = JsonSerializer.Deserialize<Dictionary<string, string>>(await response.Content.ReadAsStringAsync());
+                Console.WriteLine($"Result >> {jsonResult?["Result"]}");
+                Console.WriteLine($"STD_ERR >> {(jsonResult?.TryGetValue("std_err", out var std_err) == true ? std_err : "N/A")}");
+                Console.WriteLine($"STD_OUT >> {(jsonResult?.TryGetValue("std_out", out var std_out) == true ? std_out : "N/A")}");
+
+                if (jsonResult?["Result"] == null)
+                    throw new Exception("No result was found! Aborting...");
+
+                // TODO: Handle error correctly
+                // * Currently the code submitted doesnt work and we need to fix this
+                // * CURL request works though??
+
+                switch (jsonResult?["Result"])
+                {
+                    case "Success":
+                        return new JudgeResponse
+                        {
+                            Result = SubmissionResult.Success,
+                            source_code = request.SourceCode,
+                            exit_code = 0,
+                            submittedAt = DateTime.Now,
+                            labID = lab.ID,
+                        };
+                    case "Error":
+                        return new JudgeResponse
+                        {
+                            Result = SubmissionResult.Error,
+                            source_code = request.SourceCode,
+                            exit_code = 1,
+                            submittedAt = DateTime.Now,
+                            labID = lab.ID,
+                            std_err = jsonResult["std_err"]
+                        };
+                    case "Incorrect":
+                        return new JudgeResponse
+                        {
+                            Result = SubmissionResult.Failed,
+                            source_code = request.SourceCode,
+                            exit_code = 2,
+                            submittedAt = DateTime.Now,
+                            labID = lab.ID,
+                        };
+                    default:
+                        return new JudgeResponse
+                        {
+                            Result = SubmissionResult.Error,
+                            source_code = "you shouldnt be seeing this",
+                            exit_code = 3,
+                            submittedAt = DateTime.Now,
+                            labID = lab.ID
+                        };
+                }
+            };
+            
+
+            throw new Exception("Nah jk");
         }
 
         private string ExtractCodeFromSubmissionFileAsync(IFormFile file)

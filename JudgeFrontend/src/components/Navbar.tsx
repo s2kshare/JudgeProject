@@ -30,8 +30,7 @@ export default function Navbar({
             <div className="nav-right">
                 <div>
                     <div className="block">
-                        <div className="flex items-center gap-4">
-                            <UserProfile />
+                        <div className="flex items-center">
                             <div className="block">
                                 <Button
                                     variant="text"
@@ -47,6 +46,7 @@ export default function Navbar({
                                     )}
                                 </Button>
                             </div>
+                            <UserProfile />
                         </div>
                     </div>
                 </div>

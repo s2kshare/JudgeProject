@@ -28,7 +28,7 @@ export default function AppSidebar({ isOpen }: { isOpen: boolean }) {
                 damping: 15,
                 duration: 0.5,
             }}
-            className={`fixed shadow-xl left-0 top-0 p-10 min-w-80 w-1/5 h-full bg-[--col-base-300] z-10 xl:block`}
+            className={`fixed shadow-xl left-0 top-0 p-10 min-w-96 h-full bg-[--col-base-300] z-10 xl:block`}
         >
             <div className="upper-sidebar h-1/6 flex relative items-center justify-center mb-6">
                 <img className="w-20 h-20" src={JUDGE_LOGO}></img>

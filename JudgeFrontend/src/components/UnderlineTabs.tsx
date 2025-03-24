@@ -56,7 +56,7 @@ export function UnderlineTabs({
             >
                 {data.map(({ value, desc, element }) => (
                     <TabPanel key={value} value={value}>
-                        {desc}
+                        <p className="mb-6">{desc}</p>
                         {element}
                     </TabPanel>
                 ))}

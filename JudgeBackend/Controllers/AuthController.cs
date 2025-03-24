@@ -19,7 +19,6 @@ public class AuthController : Controller
         _configuration = configuration;
     }
 
-    // TODO: Ping Database + return json message
     [HttpGet("check-services")]
     public async Task<IActionResult> DashboardUtils()
     {
